@@ -1,0 +1,29 @@
+{
+    "name": "ttbooking/direct-bank",
+    "description": "1C Direct Bank Client",
+    "require": {
+        "PHP": "^8.0",
+        "ttbooking/mapper-php": "^2.3",
+        "ramsey/uuid": "^4.0",
+        "guzzlehttp/guzzle": "^7.0"
+    },
+    "require-dev": {
+      "phpunit/phpunit": "^9.5"
+    },
+    "autoload": {
+      "psr-4": {
+        "TTBooking\\DirectBank\\": "src/"
+      }
+    },
+    "autoload-dev": {
+      "psr-4": {
+        "TTBooking\\DirectBank\\": "tests/"
+      }
+    },
+    "authors": [
+        {
+            "name": "Egor Gruzdev",
+            "email": "egor.gruzdev@gmail.com"
+        }
+    ]
+}
