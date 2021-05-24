@@ -1,0 +1,1133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Statement xmlns="http://directbank.1c.ru/XMLSchema" id="4e4aeb70-701f-42c1-a62b-36c17d6a44d8" formatVersion="2.2.2" creationDate="2021-05-21T14:24:53.103Z">
+    <Sender bic="044525593" name="АО &quot;АЛЬФА-БАНК&quot;"/>
+    <Recipient id="40702810601300003716" name="Коллегия адвокатов &quot;Хренов и Партнеры&quot;" inn="7701336883" kpp="014350373"/>
+    <Data>
+        <StatementType>1</StatementType>
+        <DateFrom>2021-01-15T00:00:00.000Z</DateFrom>
+        <DateTo>2021-05-22T00:00:00.000Z</DateTo>
+        <Account>40702810601300003716</Account>
+        <Bank>
+            <BIC>044525593</BIC>
+            <Name>АО "АЛЬФА-БАНК"</Name>
+            <CorrespAcc>30101810200000000593</CorrespAcc>
+        </Bank>
+        <OpeningBalance>0</OpeningBalance>
+        <TotalDebits>121700.03</TotalDebits>
+        <TotalCredits>2010100.02</TotalCredits>
+        <ClosingBalance>1888399.99</ClosingBalance>
+        <OperationInfo>
+            <PayDoc id="1210118MOCOAXLI 00006" docKind="16">
+                <MemOrder>
+                    <DocNo>6</DocNo>
+                    <DocDate>2021-01-18Z</DocDate>
+                    <Author>
+                        <BIC>044525593</BIC>
+                        <Name>АО "АЛЬФА-БАНК"</Name>
+                        <Branch>ДО "Бульвар Адмирала Ушакова"</Branch>
+                    </Author>
+                    <AccountNameDebit>АО "Альфа-Банк"</AccountNameDebit>
+                    <AccountDebit>20202810001870000000</AccountDebit>
+                    <Sum>1000000</Sum>
+                    <AccountNameCredit>Коллегия адвокатов "Хренов и Партнеры"</AccountNameCredit>
+                    <AccountCredit>40702810601300003716</AccountCredit>
+                    <PartialTransitionKind>09</PartialTransitionKind>
+
+                </MemOrder>
+            </PayDoc>
+            <DC>2</DC>
+            <Date>2021-01-18Z</Date>
+        </OperationInfo>
+        <OperationInfo>
+            <PayDoc id="1210118MOCOAXLI 00004" docKind="16">
+                <MemOrder>
+                    <DocNo>4</DocNo>
+                    <DocDate>2021-01-18Z</DocDate>
+                    <Author>
+                        <BIC>044525593</BIC>
+                        <Name>АО "АЛЬФА-БАНК"</Name>
+                        <Branch>ДО "УЛИЦА ГЕНЕРАЛА БЕЛОВА"</Branch>
+                    </Author>
+                    <AccountNameDebit>АО "Альфа-Банк"</AccountNameDebit>
+                    <AccountDebit>20202810001760000000</AccountDebit>
+                    <Sum>1000000</Sum>
+                    <AccountNameCredit>Коллегия адвокатов "Хренов и Партнеры"</AccountNameCredit>
+                    <AccountCredit>40702810601300003716</AccountCredit>
+                    <PartialTransitionKind>09</PartialTransitionKind>
+
+                </MemOrder>
+            </PayDoc>
+            <DC>2</DC>
+            <Date>2021-01-18Z</Date>
+        </OperationInfo>
+        <OperationInfo>
+            <PayDoc id="1210119MOPYF6D0R00281" docKind="18">
+                <BankOrder>
+                    <DocNo>282</DocNo>
+                    <DocDate>2021-01-19Z</DocDate>
+                    <Sum>6900</Sum>
+                    <Payer>
+                        <Name>Коллегия адвокатов "Хренов и Партнеры"</Name>
+                        <INN>7701336883</INN>
+                        <KPP>014350373</KPP>
+                        <Account>40702810601300003716</Account>
+                        <Bank>
+                            <BIC>044525593</BIC>
+                            <Name>АО "АЛЬФА-БАНК"</Name>
+                            <CorrespAcc>30101810200000000593</CorrespAcc>
+                        </Bank>
+                    </Payer>
+                    <Payee>
+                        <Name>АО "Альфа-Банк"</Name>
+                        <INN>7728168971</INN>
+                        <KPP>770801001</KPP>
+                        <Account>47423810501300000557</Account>
+                        <Bank>
+                            <BIC>044525593</BIC>
+                            <Name>АО "АЛЬФА-БАНК"</Name>
+                            <CorrespAcc>30101810200000000593</CorrespAcc>
+                        </Bank>
+                    </Payee>
+                    <TransitionKind>17</TransitionKind>
+                    <Priority>5</Priority>
+                    <Purpose>Комиссия за обслуживание р/с за период с 19ДЕК20 по 18ЯНВ21 Согласно тарифам Банка Коллегия адвокатов "Хренов и Партне</Purpose>
+                </BankOrder>
+            </PayDoc>
+            <DC>1</DC>
+            <Date>2021-01-19Z</Date>
+        </OperationInfo>
+        <OperationInfo>
+            <PayDoc id="1210121MOPYF6D0R00368" docKind="18">
+                <BankOrder>
+                    <DocNo>369</DocNo>
+                    <DocDate>2021-01-21Z</DocDate>
+                    <Sum>6900</Sum>
+                    <Payer>
+                        <Name>Коллегия адвокатов "Хренов и Партнеры"</Name>
+                        <INN>7701336883</INN>
+                        <KPP>014350373</KPP>
+                        <Account>40702810601300003716</Account>
+                        <Bank>
+                            <BIC>044525593</BIC>
+                            <Name>АО "АЛЬФА-БАНК"</Name>
+                            <CorrespAcc>30101810200000000593</CorrespAcc>
+                        </Bank>
+                    </Payer>
+                    <Payee>
+                        <Name>АО "Альфа-Банк"</Name>
+                        <INN>7728168971</INN>
+                        <KPP>770801001</KPP>
+                        <Account>47423810501300000557</Account>
+                        <Bank>
+                            <BIC>044525593</BIC>
+                            <Name>АО "АЛЬФА-БАНК"</Name>
+                            <CorrespAcc>30101810200000000593</CorrespAcc>
+                        </Bank>
+                    </Payee>
+                    <TransitionKind>17</TransitionKind>
+                    <Priority>5</Priority>
+                    <Purpose>Комиссия за обслуживание р/с за период с 21ДЕК20 по 20ЯНВ21 Согласно тарифам Банка Коллегия адвокатов "Хренов и Партне</Purpose>
+                </BankOrder>
+            </PayDoc>
+            <DC>1</DC>
+            <Date>2021-01-21Z</Date>
+        </OperationInfo>
+        <OperationInfo>
+            <PayDoc id="1210126MOPYF6D0R00842" docKind="18">
+                <BankOrder>
+                    <DocNo>843</DocNo>
+                    <DocDate>2021-01-26Z</DocDate>
+                    <Sum>6900</Sum>
+                    <Payer>
+                        <Name>Коллегия адвокатов "Хренов и Партнеры"</Name>
+                        <INN>7701336883</INN>
+                        <KPP>014350373</KPP>
+                        <Account>40702810601300003716</Account>
+                        <Bank>
+                            <BIC>044525593</BIC>
+                            <Name>АО "АЛЬФА-БАНК"</Name>
+                            <CorrespAcc>30101810200000000593</CorrespAcc>
+                        </Bank>
+                    </Payer>
+                    <Payee>
+                        <Name>АО "Альфа-Банк"</Name>
+                        <INN>7728168971</INN>
+                        <KPP>770801001</KPP>
+                        <Account>47423810501300000557</Account>
+                        <Bank>
+                            <BIC>044525593</BIC>
+                            <Name>АО "АЛЬФА-БАНК"</Name>
+                            <CorrespAcc>30101810200000000593</CorrespAcc>
+                        </Bank>
+                    </Payee>
+                    <TransitionKind>17</TransitionKind>
+                    <Priority>5</Priority>
+                    <Purpose>Комиссия за обслуживание р/с за период с 26ДЕК20 по 25ЯНВ21 Согласно тарифам Банка Коллегия адвокатов "Хренов и Партне</Purpose>
+                </BankOrder>
+            </PayDoc>
+            <DC>1</DC>
+            <Date>2021-01-26Z</Date>
+        </OperationInfo>
+        <OperationInfo>
+            <PayDoc id="1210205MOPYF6D0R01445" docKind="18">
+                <BankOrder>
+                    <DocNo>1446</DocNo>
+                    <DocDate>2021-02-05Z</DocDate>
+                    <Sum>6900</Sum>
+                    <Payer>
+                        <Name>Коллегия адвокатов "Хренов и Партнеры"</Name>
+                        <INN>7701336883</INN>
+                        <KPP>014350373</KPP>
+                        <Account>40702810601300003716</Account>
+                        <Bank>
+                            <BIC>044525593</BIC>
+                            <Name>АО "АЛЬФА-БАНК"</Name>
+                            <CorrespAcc>30101810200000000593</CorrespAcc>
+                        </Bank>
+                    </Payer>
+                    <Payee>
+                        <Name>АО "Альфа-Банк"</Name>
+                        <INN>7728168971</INN>
+                        <KPP>770801001</KPP>
+                        <Account>47423810501300000557</Account>
+                        <Bank>
+                            <BIC>044525593</BIC>
+                            <Name>АО "АЛЬФА-БАНК"</Name>
+                            <CorrespAcc>30101810200000000593</CorrespAcc>
+                        </Bank>
+                    </Payee>
+                    <TransitionKind>17</TransitionKind>
+                    <Priority>5</Priority>
+                    <Purpose>Комиссия за обслуживание р/с за период с 05ЯНВ21 по 04ФЕВ21 Согласно тарифам Банка Коллегия адвокатов "Хренов и Партне</Purpose>
+                </BankOrder>
+            </PayDoc>
+            <DC>1</DC>
+            <Date>2021-02-05Z</Date>
+        </OperationInfo>
+        <OperationInfo>
+            <PayDoc id="1210212MOPYF6D0R00170" docKind="18">
+                <BankOrder>
+                    <DocNo>171</DocNo>
+                    <DocDate>2021-02-12Z</DocDate>
+                    <Sum>6900</Sum>
+                    <Payer>
+                        <Name>Коллегия адвокатов "Хренов и Партнеры"</Name>
+                        <INN>7701336883</INN>
+                        <KPP>014350373</KPP>
+                        <Account>40702810601300003716</Account>
+                        <Bank>
+                            <BIC>044525593</BIC>
+                            <Name>АО "АЛЬФА-БАНК"</Name>
+                            <CorrespAcc>30101810200000000593</CorrespAcc>
+                        </Bank>
+                    </Payer>
+                    <Payee>
+                        <Name>АО "Альфа-Банк"</Name>
+                        <INN>7728168971</INN>
+                        <KPP>770801001</KPP>
+                        <Account>47423810501300000557</Account>
+                        <Bank>
+                            <BIC>044525593</BIC>
+                            <Name>АО "АЛЬФА-БАНК"</Name>
+                            <CorrespAcc>30101810200000000593</CorrespAcc>
+                        </Bank>
+                    </Payee>
+                    <TransitionKind>17</TransitionKind>
+                    <Priority>5</Priority>
+                    <Purpose>Комиссия за обслуживание р/с за период с 12ЯНВ21 по 11ФЕВ21 Согласно тарифам Банка Коллегия адвокатов "Хренов и Партне</Purpose>
+                </BankOrder>
+            </PayDoc>
+            <DC>1</DC>
+            <Date>2021-02-12Z</Date>
+        </OperationInfo>
+        <OperationInfo>
+            <PayDoc id="1210318MOCOAK7F 00004" docKind="16">
+                <MemOrder>
+                    <DocNo>4</DocNo>
+                    <DocDate>2021-03-18Z</DocDate>
+                    <Author>
+                        <BIC>044525593</BIC>
+                        <Name>АО "АЛЬФА-БАНК"</Name>
+                        <Branch>ДО Пятницкая</Branch>
+                    </Author>
+                    <AccountNameDebit>ОБЩЕСТВО С ОГРАНИЧЕННОЙ ОТВЕТСТВЕННОСТЬЮ "МИР ТЕХНОЛОГИЙ"</AccountNameDebit>
+                    <AccountDebit>40702810001300013144</AccountDebit>
+                    <Sum>10000</Sum>
+                    <AccountNameCredit>Коллегия адвокатов "Хренов и Партнеры"</AccountNameCredit>
+                    <AccountCredit>40702810601300003716</AccountCredit>
+                    <PartialTransitionKind>09</PartialTransitionKind>
+
+                </MemOrder>
+            </PayDoc>
+            <DC>2</DC>
+            <Date>2021-03-18Z</Date>
+        </OperationInfo>
+        <OperationInfo>
+            <PayDoc id="1210318MOCOAK7F 00002" docKind="16">
+                <MemOrder>
+                    <DocNo>2</DocNo>
+                    <DocDate>2021-03-18Z</DocDate>
+                    <Author>
+                        <BIC>044525593</BIC>
+                        <Name>АО "АЛЬФА-БАНК"</Name>
+                        <Branch>ДО Пятницкая</Branch>
+                    </Author>
+                    <AccountNameDebit>ОБЩЕСТВО С ОГРАНИЧЕННОЙ ОТВЕТСТВЕННОСТЬЮ "МИР ТЕХНОЛОГИЙ"</AccountNameDebit>
+                    <AccountDebit>40702810001300013144</AccountDebit>
+                    <Sum>100</Sum>
+                    <AccountNameCredit>Коллегия адвокатов "Хренов и Партнеры"</AccountNameCredit>
+                    <AccountCredit>40702810601300003716</AccountCredit>
+                    <PartialTransitionKind>09</PartialTransitionKind>
+                </MemOrder>
+            </PayDoc>
+            <DC>2</DC>
+            <Date>2021-03-18Z</Date>
+        </OperationInfo>
+        <OperationInfo>
+            <PayDoc id="WSHHD213I000000D" docKind="10">
+                <PayDocRu>
+                    <DocNo>41938</DocNo>
+                    <DocDate>2021-03-16Z</DocDate>
+                    <Sum>0.01</Sum>
+                    <Payer>
+                        <Name>ООО "Мир Технологий"</Name>
+                        <INN>6315016823</INN>
+                        <KPP>631501001</KPP>
+                        <Account>40702810001300013144</Account>
+                        <Bank>
+                            <BIC>044525593</BIC>
+                            <Name>АО "АЛЬФА-БАНК" г Москва</Name>
+                            <CorrespAcc>30101810200000000593</CorrespAcc>
+                        </Bank>
+                    </Payer>
+                    <Payee>
+                        <Name>Коллегия адвокатов "Юридическая компания "Хренов и Партнеры", г.Москва</Name>
+                        <INN>7701336883</INN>
+                        <KPP>290101001</KPP>
+                        <Account>40702810601300003716</Account>
+                        <Bank>
+                            <BIC>044525593</BIC>
+                            <Name>АО АЛЬФА-БАНК</Name>
+                            <CorrespAcc>30101810200000000593</CorrespAcc>
+                        </Bank>
+                    </Payee>
+                    <PaymentKind>электронно</PaymentKind>
+                    <TransitionKind>01</TransitionKind>
+                    <Priority>5</Priority>
+                    <Code>0</Code>
+                    <Purpose>тестирование+h2h</Purpose>
+                    <BudgetPaymentInfo>
+                        <DrawerStatus>01</DrawerStatus>
+                        <CBC>18210601010031000110</CBC>
+                        <OKTMO>45286580</OKTMO>
+                        <Reason>00</Reason>
+                        <TaxPeriod>03.10.2020</TaxPeriod>
+                        <DocNo>0</DocNo>
+                        <DocDate>00</DocDate>
+                    </BudgetPaymentInfo>
+                </PayDocRu>
+            </PayDoc>
+            <DC>2</DC>
+            <Date>2021-03-18Z</Date>
+            <Stamp>
+                <BIC>044525593</BIC>
+                <Name>АО "АЛЬФА-БАНК"</Name>
+                <CorrespAcc>30101810200000000593</CorrespAcc>
+                <Branch>MOPY</Branch>
+                <Status>
+                    <Code>02</Code>
+                    <Name>Исполнен</Name>
+                    <MoreInfo>-</MoreInfo>
+                </Status>
+            </Stamp>
+        </OperationInfo>
+        <OperationInfo>
+            <PayDoc id="WSHHD213I000000C" docKind="10">
+                <PayDocRu>
+                    <DocNo>47938</DocNo>
+                    <DocDate>2021-03-16Z</DocDate>
+                    <Sum>0.01</Sum>
+                    <Payer>
+                        <Name>ООО "Мир Технологий"</Name>
+                        <INN>6315016823</INN>
+                        <KPP>631501001</KPP>
+                        <Account>40702810001300013144</Account>
+                        <Bank>
+                            <BIC>044525593</BIC>
+                            <Name>АО "АЛЬФА-БАНК" г Москва</Name>
+                            <CorrespAcc>30101810200000000593</CorrespAcc>
+                        </Bank>
+                    </Payer>
+                    <Payee>
+                        <Name>Коллегия адвокатов "Юридическая компания "Хренов и Партнеры", г.Москва</Name>
+                        <INN>7701336883</INN>
+                        <KPP>290101001</KPP>
+                        <Account>40702810601300003716</Account>
+                        <Bank>
+                            <BIC>044525593</BIC>
+                            <Name>АО АЛЬФА-БАНК</Name>
+                            <CorrespAcc>30101810200000000593</CorrespAcc>
+                        </Bank>
+                    </Payee>
+                    <PaymentKind>электронно</PaymentKind>
+                    <TransitionKind>01</TransitionKind>
+                    <Priority>5</Priority>
+                    <Code>0</Code>
+                    <Purpose>тестирование+h2h</Purpose>
+                    <BudgetPaymentInfo>
+                        <DrawerStatus>01</DrawerStatus>
+                        <CBC>18210601010031000110</CBC>
+                        <OKTMO>45286580</OKTMO>
+                        <Reason>00</Reason>
+                        <TaxPeriod>03.10.2020</TaxPeriod>
+                        <DocNo>0</DocNo>
+                        <DocDate>0</DocDate>
+                    </BudgetPaymentInfo>
+                </PayDocRu>
+            </PayDoc>
+            <DC>2</DC>
+            <Date>2021-03-18Z</Date>
+            <Stamp>
+                <BIC>044525593</BIC>
+                <Name>АО "АЛЬФА-БАНК"</Name>
+                <CorrespAcc>30101810200000000593</CorrespAcc>
+                <Branch>MOPY</Branch>
+                <Status>
+                    <Code>02</Code>
+                    <Name>Исполнен</Name>
+                    <MoreInfo>-</MoreInfo>
+                </Status>
+            </Stamp>
+        </OperationInfo>
+        <OperationInfo>
+            <PayDoc id="1210406MOPYF6D0R00008" docKind="18">
+                <BankOrder>
+                    <DocNo>9</DocNo>
+                    <DocDate>2021-04-06Z</DocDate>
+                    <Sum>6900</Sum>
+                    <Payer>
+                        <Name>Коллегия адвокатов "Хренов и Партнеры"</Name>
+                        <INN>7701336883</INN>
+                        <KPP>014350373</KPP>
+                        <Account>40702810601300003716</Account>
+                        <Bank>
+                            <BIC>044525593</BIC>
+                            <Name>АО "АЛЬФА-БАНК"</Name>
+                            <CorrespAcc>30101810200000000593</CorrespAcc>
+                        </Bank>
+                    </Payer>
+                    <Payee>
+                        <Name>АО "Альфа-Банк"</Name>
+                        <INN>7728168971</INN>
+                        <KPP>770801001</KPP>
+                        <Account>47423810501300000557</Account>
+                        <Bank>
+                            <BIC>044525593</BIC>
+                            <Name>АО "АЛЬФА-БАНК"</Name>
+                            <CorrespAcc>30101810200000000593</CorrespAcc>
+                        </Bank>
+                    </Payee>
+                    <TransitionKind>17</TransitionKind>
+                    <Priority>5</Priority>
+                    <Purpose>Комиссия за обслуживание р/с за период с 06МАР21 по 05АПР21 Согласно тарифам Банка Коллегия адвокатов "Хренов и Партне</Purpose>
+                </BankOrder>
+            </PayDoc>
+            <DC>1</DC>
+            <Date>2021-04-06Z</Date>
+        </OperationInfo>
+        <OperationInfo>
+            <PayDoc id="1210407MOPYF6D0R00008" docKind="18">
+                <BankOrder>
+                    <DocNo>9</DocNo>
+                    <DocDate>2021-04-07Z</DocDate>
+                    <Sum>6900</Sum>
+                    <Payer>
+                        <Name>Коллегия адвокатов "Хренов и Партнеры"</Name>
+                        <INN>7701336883</INN>
+                        <KPP>014350373</KPP>
+                        <Account>40702810601300003716</Account>
+                        <Bank>
+                            <BIC>044525593</BIC>
+                            <Name>АО "АЛЬФА-БАНК"</Name>
+                            <CorrespAcc>30101810200000000593</CorrespAcc>
+                        </Bank>
+                    </Payer>
+                    <Payee>
+                        <Name>АО "Альфа-Банк"</Name>
+                        <INN>7728168971</INN>
+                        <KPP>770801001</KPP>
+                        <Account>47423810501300000557</Account>
+                        <Bank>
+                            <BIC>044525593</BIC>
+                            <Name>АО "АЛЬФА-БАНК"</Name>
+                            <CorrespAcc>30101810200000000593</CorrespAcc>
+                        </Bank>
+                    </Payee>
+                    <TransitionKind>17</TransitionKind>
+                    <Priority>5</Priority>
+                    <Purpose>Комиссия за обслуживание р/с за период с 07МАР21 по 06АПР21 Согласно тарифам Банка Коллегия адвокатов "Хренов и Партне</Purpose>
+                </BankOrder>
+            </PayDoc>
+            <DC>1</DC>
+            <Date>2021-04-07Z</Date>
+        </OperationInfo>
+        <OperationInfo>
+            <PayDoc id="1210408MOPYF6D0R00008" docKind="18">
+                <BankOrder>
+                    <DocNo>9</DocNo>
+                    <DocDate>2021-04-08Z</DocDate>
+                    <Sum>6900</Sum>
+                    <Payer>
+                        <Name>Коллегия адвокатов "Хренов и Партнеры"</Name>
+                        <INN>7701336883</INN>
+                        <KPP>014350373</KPP>
+                        <Account>40702810601300003716</Account>
+                        <Bank>
+                            <BIC>044525593</BIC>
+                            <Name>АО "АЛЬФА-БАНК"</Name>
+                            <CorrespAcc>30101810200000000593</CorrespAcc>
+                        </Bank>
+                    </Payer>
+                    <Payee>
+                        <Name>АО "Альфа-Банк"</Name>
+                        <INN>7728168971</INN>
+                        <KPP>770801001</KPP>
+                        <Account>47423810501300000557</Account>
+                        <Bank>
+                            <BIC>044525593</BIC>
+                            <Name>АО "АЛЬФА-БАНК"</Name>
+                            <CorrespAcc>30101810200000000593</CorrespAcc>
+                        </Bank>
+                    </Payee>
+                    <TransitionKind>17</TransitionKind>
+                    <Priority>5</Priority>
+                    <Purpose>Комиссия за обслуживание р/с за период с 08МАР21 по 07АПР21 Согласно тарифам Банка Коллегия адвокатов "Хренов и Партне</Purpose>
+                </BankOrder>
+            </PayDoc>
+            <DC>1</DC>
+            <Date>2021-04-08Z</Date>
+        </OperationInfo>
+        <OperationInfo>
+            <PayDoc id="WSHHN21490000007" docKind="10">
+                <PayDocRu>
+                    <DocNo>48</DocNo>
+                    <DocDate>2021-04-09Z</DocDate>
+                    <Sum>0.01</Sum>
+                    <Payer>
+                        <Name>КА "Хренов и Партнеры"</Name>
+                        <INN>7701336883</INN>
+                        <KPP>014350373</KPP>
+                        <Account>40702810601300003716</Account>
+                        <Bank>
+                            <BIC>044525593</BIC>
+                            <Name>АО "АЛЬФА-БАНК" г Москва</Name>
+                            <CorrespAcc>30101810200000000593</CorrespAcc>
+                        </Bank>
+                    </Payer>
+                    <Payee>
+                        <Name>ООО УК"Альфа-Капитал"Д.У.</Name>
+                        <INN>7728142469</INN>
+                        <KPP>745301001</KPP>
+                        <Account>40701810301600000105</Account>
+                        <Bank>
+                            <BIC>044525593</BIC>
+                            <Name>АО "АЛЬФА-БАНК" г Москва</Name>
+                            <CorrespAcc>30101810200000000593</CorrespAcc>
+                        </Bank>
+                    </Payee>
+                    <PaymentKind>электронно</PaymentKind>
+                    <TransitionKind>01</TransitionKind>
+                    <Priority>5</Priority>
+                    <Purpose>Тестирование h2h</Purpose>
+                </PayDocRu>
+            </PayDoc>
+            <DC>1</DC>
+            <Date>2021-04-09Z</Date>
+            <ExtID>2d9cce1a-710b-444c-8eb1-17236605a97b</ExtID>
+            <Stamp>
+                <BIC>044525593</BIC>
+                <Name>АО "АЛЬФА-БАНК"</Name>
+                <CorrespAcc>30101810200000000593</CorrespAcc>
+                <Branch>MOPY</Branch>
+                <Status>
+                    <Code>02</Code>
+                    <Name>Исполнен</Name>
+                    <MoreInfo>-</MoreInfo>
+                </Status>
+            </Stamp>
+        </OperationInfo>
+        <OperationInfo>
+            <PayDoc id="1210409MOPYF6D0R01406" docKind="18">
+                <BankOrder>
+                    <DocNo>1407</DocNo>
+                    <DocDate>2021-04-09Z</DocDate>
+                    <Sum>6900</Sum>
+                    <Payer>
+                        <Name>Коллегия адвокатов "Хренов и Партнеры"</Name>
+                        <INN>7701336883</INN>
+                        <KPP>014350373</KPP>
+                        <Account>40702810601300003716</Account>
+                        <Bank>
+                            <BIC>044525593</BIC>
+                            <Name>АО "АЛЬФА-БАНК"</Name>
+                            <CorrespAcc>30101810200000000593</CorrespAcc>
+                        </Bank>
+                    </Payer>
+                    <Payee>
+                        <Name>АО "Альфа-Банк"</Name>
+                        <INN>7728168971</INN>
+                        <KPP>770801001</KPP>
+                        <Account>47423810501300000557</Account>
+                        <Bank>
+                            <BIC>044525593</BIC>
+                            <Name>АО "АЛЬФА-БАНК"</Name>
+                            <CorrespAcc>30101810200000000593</CorrespAcc>
+                        </Bank>
+                    </Payee>
+                    <TransitionKind>17</TransitionKind>
+                    <Priority>5</Priority>
+                    <Purpose>Комиссия за обслуживание р/с за период с 09МАР21 по 08АПР21 Согласно тарифам Банка Коллегия адвокатов "Хренов и Партне</Purpose>
+                </BankOrder>
+            </PayDoc>
+            <DC>1</DC>
+            <Date>2021-04-09Z</Date>
+        </OperationInfo>
+        <OperationInfo>
+            <PayDoc id="1210410MOPYF6D0R01337" docKind="18">
+                <BankOrder>
+                    <DocNo>1338</DocNo>
+                    <DocDate>2021-04-10Z</DocDate>
+                    <Sum>6900</Sum>
+                    <Payer>
+                        <Name>Коллегия адвокатов "Хренов и Партнеры"</Name>
+                        <INN>7701336883</INN>
+                        <KPP>014350373</KPP>
+                        <Account>40702810601300003716</Account>
+                        <Bank>
+                            <BIC>044525593</BIC>
+                            <Name>АО "АЛЬФА-БАНК"</Name>
+                            <CorrespAcc>30101810200000000593</CorrespAcc>
+                        </Bank>
+                    </Payer>
+                    <Payee>
+                        <Name>АО "Альфа-Банк"</Name>
+                        <INN>7728168971</INN>
+                        <KPP>770801001</KPP>
+                        <Account>47423810501300000557</Account>
+                        <Bank>
+                            <BIC>044525593</BIC>
+                            <Name>АО "АЛЬФА-БАНК"</Name>
+                            <CorrespAcc>30101810200000000593</CorrespAcc>
+                        </Bank>
+                    </Payee>
+                    <TransitionKind>17</TransitionKind>
+                    <Priority>5</Priority>
+                    <Purpose>Комиссия за обслуживание р/с за период с 10МАР21 по 09АПР21 Согласно тарифам Банка Коллегия адвокатов "Хренов и Партне</Purpose>
+                </BankOrder>
+            </PayDoc>
+            <DC>1</DC>
+            <Date>2021-04-10Z</Date>
+        </OperationInfo>
+        <OperationInfo>
+            <PayDoc id="1210411MOPYF6D0R02813" docKind="18">
+                <BankOrder>
+                    <DocNo>2814</DocNo>
+                    <DocDate>2021-04-11Z</DocDate>
+                    <Sum>6900</Sum>
+                    <Payer>
+                        <Name>Коллегия адвокатов "Хренов и Партнеры"</Name>
+                        <INN>7701336883</INN>
+                        <KPP>014350373</KPP>
+                        <Account>40702810601300003716</Account>
+                        <Bank>
+                            <BIC>044525593</BIC>
+                            <Name>АО "АЛЬФА-БАНК"</Name>
+                            <CorrespAcc>30101810200000000593</CorrespAcc>
+                        </Bank>
+                    </Payer>
+                    <Payee>
+                        <Name>АО "Альфа-Банк"</Name>
+                        <INN>7728168971</INN>
+                        <KPP>770801001</KPP>
+                        <Account>47423810501300000557</Account>
+                        <Bank>
+                            <BIC>044525593</BIC>
+                            <Name>АО "АЛЬФА-БАНК"</Name>
+                            <CorrespAcc>30101810200000000593</CorrespAcc>
+                        </Bank>
+                    </Payee>
+                    <TransitionKind>17</TransitionKind>
+                    <Priority>5</Priority>
+                    <Purpose>Комиссия за обслуживание р/с за период с 11МАР21 по 10АПР21 Согласно тарифам Банка Коллегия адвокатов "Хренов и Партне</Purpose>
+                </BankOrder>
+            </PayDoc>
+            <DC>1</DC>
+            <Date>2021-04-11Z</Date>
+        </OperationInfo>
+        <OperationInfo>
+            <PayDoc id="WSHHD214C0000063" docKind="10">
+                <PayDocRu>
+                    <DocNo>49</DocNo>
+                    <DocDate>2021-04-12Z</DocDate>
+                    <Sum>0.01</Sum>
+                    <Payer>
+                        <Name>КА "Хренов и Партнеры"</Name>
+                        <INN>7701336883</INN>
+                        <KPP>014350373</KPP>
+                        <Account>40702810601300003716</Account>
+                        <Bank>
+                            <BIC>044525593</BIC>
+                            <Name>АО "АЛЬФА-БАНК" г Москва</Name>
+                            <CorrespAcc>30101810200000000593</CorrespAcc>
+                        </Bank>
+                    </Payer>
+                    <Payee>
+                        <Name>ООО УК"Альфа-Капитал"Д.У.</Name>
+                        <INN>7728142469</INN>
+                        <KPP>745301001</KPP>
+                        <Account>40701810301600000105</Account>
+                        <Bank>
+                            <BIC>044525593</BIC>
+                            <Name>АО "АЛЬФА-БАНК" г Москва</Name>
+                            <CorrespAcc>30101810200000000593</CorrespAcc>
+                        </Bank>
+                    </Payee>
+                    <PaymentKind>электронно</PaymentKind>
+                    <TransitionKind>01</TransitionKind>
+                    <Priority>5</Priority>
+                    <Purpose>Тестирование h2h</Purpose>
+                </PayDocRu>
+            </PayDoc>
+            <DC>1</DC>
+            <Date>2021-04-12Z</Date>
+            <ExtID>aafe4bb4-2f1e-4e02-9b4c-9142361a4117</ExtID>
+            <Stamp>
+                <BIC>044525593</BIC>
+                <Name>АО "АЛЬФА-БАНК"</Name>
+                <CorrespAcc>30101810200000000593</CorrespAcc>
+                <Branch>MOPY</Branch>
+                <Status>
+                    <Code>02</Code>
+                    <Name>Исполнен</Name>
+                    <MoreInfo>-</MoreInfo>
+                </Status>
+            </Stamp>
+        </OperationInfo>
+        <OperationInfo>
+            <PayDoc id="1210412MOPYF6D0R01226" docKind="18">
+                <BankOrder>
+                    <DocNo>1227</DocNo>
+                    <DocDate>2021-04-12Z</DocDate>
+                    <Sum>6900</Sum>
+                    <Payer>
+                        <Name>Коллегия адвокатов "Хренов и Партнеры"</Name>
+                        <INN>7701336883</INN>
+                        <KPP>014350373</KPP>
+                        <Account>40702810601300003716</Account>
+                        <Bank>
+                            <BIC>044525593</BIC>
+                            <Name>АО "АЛЬФА-БАНК"</Name>
+                            <CorrespAcc>30101810200000000593</CorrespAcc>
+                        </Bank>
+                    </Payer>
+                    <Payee>
+                        <Name>АО "Альфа-Банк"</Name>
+                        <INN>7728168971</INN>
+                        <KPP>770801001</KPP>
+                        <Account>47423810501300000557</Account>
+                        <Bank>
+                            <BIC>044525593</BIC>
+                            <Name>АО "АЛЬФА-БАНК"</Name>
+                            <CorrespAcc>30101810200000000593</CorrespAcc>
+                        </Bank>
+                    </Payee>
+                    <TransitionKind>17</TransitionKind>
+                    <Priority>5</Priority>
+                    <Purpose>Комиссия за обслуживание р/с за период с 12МАР21 по 11АПР21 Согласно тарифам Банка Коллегия адвокатов "Хренов и Партне</Purpose>
+                </BankOrder>
+            </PayDoc>
+            <DC>1</DC>
+            <Date>2021-04-12Z</Date>
+        </OperationInfo>
+        <OperationInfo>
+            <PayDoc id="1210413MOPYF6D0A00008" docKind="18">
+                <BankOrder>
+                    <DocNo>9</DocNo>
+                    <DocDate>2021-04-13Z</DocDate>
+                    <Sum>4000</Sum>
+                    <Payer>
+                        <Name>Коллегия адвокатов "Хренов и Партнеры"</Name>
+                        <INN>7701336883</INN>
+                        <KPP>014350373</KPP>
+                        <Account>40702810601300003716</Account>
+                        <Bank>
+                            <BIC>044525593</BIC>
+                            <Name>АО "АЛЬФА-БАНК"</Name>
+                            <CorrespAcc>30101810200000000593</CorrespAcc>
+                        </Bank>
+                    </Payer>
+                    <Payee>
+                        <Name>АО "Альфа-Банк"</Name>
+                        <INN>7728168971</INN>
+                        <KPP>770801001</KPP>
+                        <Account>47423810501300000557</Account>
+                        <Bank>
+                            <BIC>044525593</BIC>
+                            <Name>АО "АЛЬФА-БАНК"</Name>
+                            <CorrespAcc>30101810200000000593</CorrespAcc>
+                        </Bank>
+                    </Payee>
+                    <TransitionKind>17</TransitionKind>
+                    <Priority>5</Priority>
+                    <Purpose>Комиссия за обслуживание р/с за период с 13МАР21 по 12АПР21 Согласно тарифам Банка Коллегия адвокатов "Хренов и Партне</Purpose>
+                </BankOrder>
+            </PayDoc>
+            <DC>1</DC>
+            <Date>2021-04-13Z</Date>
+        </OperationInfo>
+        <OperationInfo>
+            <PayDoc id="1210414MOPYF6D0A00008" docKind="18">
+                <BankOrder>
+                    <DocNo>9</DocNo>
+                    <DocDate>2021-04-14Z</DocDate>
+                    <Sum>4000</Sum>
+                    <Payer>
+                        <Name>Коллегия адвокатов "Хренов и Партнеры"</Name>
+                        <INN>7701336883</INN>
+                        <KPP>014350373</KPP>
+                        <Account>40702810601300003716</Account>
+                        <Bank>
+                            <BIC>044525593</BIC>
+                            <Name>АО "АЛЬФА-БАНК"</Name>
+                            <CorrespAcc>30101810200000000593</CorrespAcc>
+                        </Bank>
+                    </Payer>
+                    <Payee>
+                        <Name>АО "Альфа-Банк"</Name>
+                        <INN>7728168971</INN>
+                        <KPP>770801001</KPP>
+                        <Account>47423810501300000557</Account>
+                        <Bank>
+                            <BIC>044525593</BIC>
+                            <Name>АО "АЛЬФА-БАНК"</Name>
+                            <CorrespAcc>30101810200000000593</CorrespAcc>
+                        </Bank>
+                    </Payee>
+                    <TransitionKind>17</TransitionKind>
+                    <Priority>5</Priority>
+                    <Purpose>Комиссия за обслуживание р/с за период с 14МАР21 по 13АПР21 Согласно тарифам Банка Коллегия адвокатов "Хренов и Партне</Purpose>
+                </BankOrder>
+            </PayDoc>
+            <DC>1</DC>
+            <Date>2021-04-14Z</Date>
+        </OperationInfo>
+        <OperationInfo>
+            <PayDoc id="1210415MOPYF6D0A00008" docKind="18">
+                <BankOrder>
+                    <DocNo>9</DocNo>
+                    <DocDate>2021-04-15Z</DocDate>
+                    <Sum>4000</Sum>
+                    <Payer>
+                        <Name>Коллегия адвокатов "Хренов и Партнеры"</Name>
+                        <INN>7701336883</INN>
+                        <KPP>014350373</KPP>
+                        <Account>40702810601300003716</Account>
+                        <Bank>
+                            <BIC>044525593</BIC>
+                            <Name>АО "АЛЬФА-БАНК"</Name>
+                            <CorrespAcc>30101810200000000593</CorrespAcc>
+                        </Bank>
+                    </Payer>
+                    <Payee>
+                        <Name>АО "Альфа-Банк"</Name>
+                        <INN>7728168971</INN>
+                        <KPP>770801001</KPP>
+                        <Account>47423810501300000557</Account>
+                        <Bank>
+                            <BIC>044525593</BIC>
+                            <Name>АО "АЛЬФА-БАНК"</Name>
+                            <CorrespAcc>30101810200000000593</CorrespAcc>
+                        </Bank>
+                    </Payee>
+                    <TransitionKind>17</TransitionKind>
+                    <Priority>5</Priority>
+                    <Purpose>Комиссия за обслуживание р/с за период с 15МАР21 по 14АПР21 Согласно тарифам Банка Коллегия адвокатов "Хренов и Партне</Purpose>
+                </BankOrder>
+            </PayDoc>
+            <DC>1</DC>
+            <Date>2021-04-15Z</Date>
+        </OperationInfo>
+        <OperationInfo>
+            <PayDoc id="1210416MOPYF6D0A00008" docKind="18">
+                <BankOrder>
+                    <DocNo>9</DocNo>
+                    <DocDate>2021-04-16Z</DocDate>
+                    <Sum>4000</Sum>
+                    <Payer>
+                        <Name>Коллегия адвокатов "Хренов и Партнеры"</Name>
+                        <INN>7701336883</INN>
+                        <KPP>014350373</KPP>
+                        <Account>40702810601300003716</Account>
+                        <Bank>
+                            <BIC>044525593</BIC>
+                            <Name>АО "АЛЬФА-БАНК"</Name>
+                            <CorrespAcc>30101810200000000593</CorrespAcc>
+                        </Bank>
+                    </Payer>
+                    <Payee>
+                        <Name>АО "Альфа-Банк"</Name>
+                        <INN>7728168971</INN>
+                        <KPP>770801001</KPP>
+                        <Account>47423810501300000557</Account>
+                        <Bank>
+                            <BIC>044525593</BIC>
+                            <Name>АО "АЛЬФА-БАНК"</Name>
+                            <CorrespAcc>30101810200000000593</CorrespAcc>
+                        </Bank>
+                    </Payee>
+                    <TransitionKind>17</TransitionKind>
+                    <Priority>5</Priority>
+                    <Purpose>Комиссия за обслуживание р/с за период с 16МАР21 по 15АПР21 Согласно тарифам Банка Коллегия адвокатов "Хренов и Партне</Purpose>
+                </BankOrder>
+            </PayDoc>
+            <DC>1</DC>
+            <Date>2021-04-16Z</Date>
+        </OperationInfo>
+        <OperationInfo>
+            <PayDoc id="1210417MOPYF6D0A00005" docKind="18">
+                <BankOrder>
+                    <DocNo>6</DocNo>
+                    <DocDate>2021-04-17Z</DocDate>
+                    <Sum>4000</Sum>
+                    <Payer>
+                        <Name>Коллегия адвокатов "Хренов и Партнеры"</Name>
+                        <INN>7701336883</INN>
+                        <KPP>014350373</KPP>
+                        <Account>40702810601300003716</Account>
+                        <Bank>
+                            <BIC>044525593</BIC>
+                            <Name>АО "АЛЬФА-БАНК"</Name>
+                            <CorrespAcc>30101810200000000593</CorrespAcc>
+                        </Bank>
+                    </Payer>
+                    <Payee>
+                        <Name>АО "Альфа-Банк"</Name>
+                        <INN>7728168971</INN>
+                        <KPP>770801001</KPP>
+                        <Account>47423810501300000557</Account>
+                        <Bank>
+                            <BIC>044525593</BIC>
+                            <Name>АО "АЛЬФА-БАНК"</Name>
+                            <CorrespAcc>30101810200000000593</CorrespAcc>
+                        </Bank>
+                    </Payee>
+                    <TransitionKind>17</TransitionKind>
+                    <Priority>5</Priority>
+                    <Purpose>Комиссия за обслуживание р/с за период с 17МАР21 по 16АПР21 Согласно тарифам Банка Коллегия адвокатов "Хренов и Партне</Purpose>
+                </BankOrder>
+            </PayDoc>
+            <DC>1</DC>
+            <Date>2021-04-17Z</Date>
+        </OperationInfo>
+        <OperationInfo>
+            <PayDoc id="1210418MOPYF6D0A00008" docKind="18">
+                <BankOrder>
+                    <DocNo>9</DocNo>
+                    <DocDate>2021-04-18Z</DocDate>
+                    <Sum>4000</Sum>
+                    <Payer>
+                        <Name>Коллегия адвокатов "Хренов и Партнеры"</Name>
+                        <INN>7701336883</INN>
+                        <KPP>014350373</KPP>
+                        <Account>40702810601300003716</Account>
+                        <Bank>
+                            <BIC>044525593</BIC>
+                            <Name>АО "АЛЬФА-БАНК"</Name>
+                            <CorrespAcc>30101810200000000593</CorrespAcc>
+                        </Bank>
+                    </Payer>
+                    <Payee>
+                        <Name>АО "Альфа-Банк"</Name>
+                        <INN>7728168971</INN>
+                        <KPP>770801001</KPP>
+                        <Account>47423810501300000557</Account>
+                        <Bank>
+                            <BIC>044525593</BIC>
+                            <Name>АО "АЛЬФА-БАНК"</Name>
+                            <CorrespAcc>30101810200000000593</CorrespAcc>
+                        </Bank>
+                    </Payee>
+                    <TransitionKind>17</TransitionKind>
+                    <Priority>5</Priority>
+                    <Purpose>Комиссия за обслуживание р/с за период с 18МАР21 по 17АПР21 Согласно тарифам Банка Коллегия адвокатов "Хренов и Партне</Purpose>
+                </BankOrder>
+            </PayDoc>
+            <DC>1</DC>
+            <Date>2021-04-18Z</Date>
+        </OperationInfo>
+        <OperationInfo>
+            <PayDoc id="WSHHD214J0000002" docKind="10">
+                <PayDocRu>
+                    <DocNo>50</DocNo>
+                    <DocDate>2021-04-19Z</DocDate>
+                    <Sum>0.01</Sum>
+                    <Payer>
+                        <Name>КА "Хренов и Партнеры"</Name>
+                        <INN>7701336883</INN>
+                        <KPP>014350373</KPP>
+                        <Account>40702810601300003716</Account>
+                        <Bank>
+                            <BIC>044525593</BIC>
+                            <Name>АО "АЛЬФА-БАНК" г Москва</Name>
+                            <CorrespAcc>30101810200000000593</CorrespAcc>
+                        </Bank>
+                    </Payer>
+                    <Payee>
+                        <Name>ООО УК"Альфа-Капитал"Д.У.</Name>
+                        <INN>7728142469</INN>
+                        <KPP>745301001</KPP>
+                        <Account>40701810301600000105</Account>
+                        <Bank>
+                            <BIC>044525593</BIC>
+                            <Name>АО "АЛЬФА-БАНК" г Москва</Name>
+                            <CorrespAcc>30101810200000000593</CorrespAcc>
+                        </Bank>
+                    </Payee>
+                    <PaymentKind>электронно</PaymentKind>
+                    <TransitionKind>01</TransitionKind>
+                    <Priority>5</Priority>
+                    <Purpose>Тестирование h2h</Purpose>
+                </PayDocRu>
+            </PayDoc>
+            <DC>1</DC>
+            <Date>2021-04-19Z</Date>
+            <ExtID>43b2a063-f54c-4c40-af0f-66588c2931af</ExtID>
+            <Stamp>
+                <BIC>044525593</BIC>
+                <Name>АО "АЛЬФА-БАНК"</Name>
+                <CorrespAcc>30101810200000000593</CorrespAcc>
+                <Branch>MOPY</Branch>
+                <Status>
+                    <Code>02</Code>
+                    <Name>Исполнен</Name>
+                    <MoreInfo>-</MoreInfo>
+                </Status>
+            </Stamp>
+        </OperationInfo>
+        <OperationInfo>
+            <PayDoc id="1210419MOPYF6D0A00008" docKind="18">
+                <BankOrder>
+                    <DocNo>9</DocNo>
+                    <DocDate>2021-04-19Z</DocDate>
+                    <Sum>4000</Sum>
+                    <Payer>
+                        <Name>Коллегия адвокатов "Хренов и Партнеры"</Name>
+                        <INN>7701336883</INN>
+                        <KPP>014350373</KPP>
+                        <Account>40702810601300003716</Account>
+                        <Bank>
+                            <BIC>044525593</BIC>
+                            <Name>АО "АЛЬФА-БАНК"</Name>
+                            <CorrespAcc>30101810200000000593</CorrespAcc>
+                        </Bank>
+                    </Payer>
+                    <Payee>
+                        <Name>АО "Альфа-Банк"</Name>
+                        <INN>7728168971</INN>
+                        <KPP>770801001</KPP>
+                        <Account>47423810501300000557</Account>
+                        <Bank>
+                            <BIC>044525593</BIC>
+                            <Name>АО "АЛЬФА-БАНК"</Name>
+                            <CorrespAcc>30101810200000000593</CorrespAcc>
+                        </Bank>
+                    </Payee>
+                    <TransitionKind>17</TransitionKind>
+                    <Priority>5</Priority>
+                    <Purpose>Комиссия за обслуживание р/с за период с 19МАР21 по 18АПР21 Согласно тарифам Банка Коллегия адвокатов "Хренов и Партне</Purpose>
+                </BankOrder>
+            </PayDoc>
+            <DC>1</DC>
+            <Date>2021-04-19Z</Date>
+        </OperationInfo>
+        <OperationInfo>
+            <PayDoc id="1210420MOPYF6D0A00011" docKind="18">
+                <BankOrder>
+                    <DocNo>12</DocNo>
+                    <DocDate>2021-04-20Z</DocDate>
+                    <Sum>4000</Sum>
+                    <Payer>
+                        <Name>Коллегия адвокатов "Хренов и Партнеры"</Name>
+                        <INN>7701336883</INN>
+                        <KPP>014350373</KPP>
+                        <Account>40702810601300003716</Account>
+                        <Bank>
+                            <BIC>044525593</BIC>
+                            <Name>АО "АЛЬФА-БАНК"</Name>
+                            <CorrespAcc>30101810200000000593</CorrespAcc>
+                        </Bank>
+                    </Payer>
+                    <Payee>
+                        <Name>АО "Альфа-Банк"</Name>
+                        <INN>7728168971</INN>
+                        <KPP>770801001</KPP>
+                        <Account>47423810501300000557</Account>
+                        <Bank>
+                            <BIC>044525593</BIC>
+                            <Name>АО "АЛЬФА-БАНК"</Name>
+                            <CorrespAcc>30101810200000000593</CorrespAcc>
+                        </Bank>
+                    </Payee>
+                    <TransitionKind>17</TransitionKind>
+                    <Priority>5</Priority>
+                    <Purpose>Комиссия за обслуживание р/с за период с 20МАР21 по 19АПР21 Согласно тарифам Банка Коллегия адвокатов "Хренов и Партне</Purpose>
+                </BankOrder>
+            </PayDoc>
+            <DC>1</DC>
+            <Date>2021-04-20Z</Date>
+        </OperationInfo>
+        <OperationInfo>
+            <PayDoc id="1210421MOPYF6D0R00014" docKind="18">
+                <BankOrder>
+                    <DocNo>15</DocNo>
+                    <DocDate>2021-04-21Z</DocDate>
+                    <Sum>6900</Sum>
+                    <Payer>
+                        <Name>Коллегия адвокатов "Хренов и Партнеры"</Name>
+                        <INN>7701336883</INN>
+                        <KPP>014350373</KPP>
+                        <Account>40702810601300003716</Account>
+                        <Bank>
+                            <BIC>044525593</BIC>
+                            <Name>АО "АЛЬФА-БАНК"</Name>
+                            <CorrespAcc>30101810200000000593</CorrespAcc>
+                        </Bank>
+                    </Payer>
+                    <Payee>
+                        <Name>АО "Альфа-Банк"</Name>
+                        <INN>7728168971</INN>
+                        <KPP>770801001</KPP>
+                        <Account>47423810501300000557</Account>
+                        <Bank>
+                            <BIC>044525593</BIC>
+                            <Name>АО "АЛЬФА-БАНК"</Name>
+                            <CorrespAcc>30101810200000000593</CorrespAcc>
+                        </Bank>
+                    </Payee>
+                    <TransitionKind>17</TransitionKind>
+                    <Priority>5</Priority>
+                    <Purpose>Комиссия за обслуживание р/с за период с 21МАР21 по 20АПР21 Согласно тарифам Банка Коллегия адвокатов "Хренов и Партне</Purpose>
+                </BankOrder>
+            </PayDoc>
+            <DC>1</DC>
+            <Date>2021-04-21Z</Date>
+        </OperationInfo>
+        <Stamp>
+            <BIC>044525593</BIC>
+            <Name>АО "АЛЬФА-БАНК"</Name>
+            <CorrespAcc>30101810200000000593</CorrespAcc>
+            <Branch>MOPY</Branch>
+        </Stamp>
+    </Data>
+    <ExtIDStatementRequest>41c15931-8d51-4794-84d4-f0c87e51c4ba</ExtIDStatementRequest>
+</Statement>

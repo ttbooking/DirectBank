@@ -26,7 +26,7 @@ class PacketFixture
         $dateFormat = \DATE_ATOM;
 
         $dateFrom = new \DateTimeImmutable('2021-01-15T00:00:00Z');
-        $dateTo = new \DateTimeImmutable('2021-01-22T00:00:00Z');
+        $dateTo = new \DateTimeImmutable('2021-05-22T00:00:00Z');
 
         $customer = (new CustomerPartyType())
             ->setId('40702810601300003716');
