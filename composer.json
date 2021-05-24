@@ -8,6 +8,7 @@
         "guzzlehttp/guzzle": "^7.0"
     },
     "require-dev": {
+      "ext-dom": "*",
       "phpunit/phpunit": "^9.5"
     },
     "autoload": {
