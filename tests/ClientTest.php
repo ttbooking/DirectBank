@@ -3,9 +3,13 @@ declare(strict_types=1);
 
 namespace TTBooking\DirectBank;
 
+use Mapper\XmlModelMapper;
 use PHPUnit\Framework\TestCase;
 use TTBooking\DirectBank\Dictionary\DefaultValue;
+use TTBooking\DirectBank\Dictionary\DocKind;
 use TTBooking\DirectBank\Fixture\PacketFixture;
+use TTBooking\DirectBank\Objects\Statement;
+use TTBooking\DirectBank\Objects\StatusPacketNotice;
 
 final class ClientTest extends TestCase
 {
@@ -53,9 +57,20 @@ final class ClientTest extends TestCase
 
         $this->assertIsArray($packIds);
 
+        $xmlMapper = new XmlModelMapper();
+
         if($packIds) {
             foreach ($packIds as $packId) {
                 $pack = $this->client->getPack($packId);
+
+                $document = base64_decode($pack->getDocument()->getData());
+                $docKind = $pack->getDocument()->getDockind();
+
+                $document = match (true) {
+                    $docKind === DocKind::SHIPPING_CONTAINER_HANDLING_STATUS_NOTIFICATION =>  $xmlMapper->map($document, new StatusPacketNotice()),
+                    $docKind === DocKind::BANK_STATEMENT => $xmlMapper->map($document, new Statement()),
+                    default => null,
+                };
             }
         }
     }
