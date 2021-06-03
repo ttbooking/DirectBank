@@ -3,16 +3,17 @@ declare(strict_types=1);
 
 namespace TTBooking\DirectBank\Objects;
 
-use Mapper\XmlModelMapper;
 use PHPUnit\Framework\TestCase;
 
 class StatementTest extends TestCase
 {
     protected string $xml;
+    protected string $xml_empty_order_info;
 
     protected function setUp(): void
     {
         $this->xml = file_get_contents(__DIR__ . '/../Fixture/xml/statement.xml');
+        $this->xml_empty_order_info = file_get_contents(__DIR__ . '/../Fixture/xml/statement_empty_order_info.xml');
     }
 
     public function testFromXml()
@@ -45,5 +46,10 @@ class StatementTest extends TestCase
         }
 
         $this->assertEquals($payDocs1, $payDocs2);
+
+        $statement = new Statement();
+        $statement->mapFromXml($this->xml_empty_order_info);
+
+        $this->assertEquals([], $statement->getData()->getOperationInfo());
     }
 }
