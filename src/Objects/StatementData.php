@@ -27,7 +27,7 @@ class StatementData
     /**
      * @var OperationInfo[]
      */
-    protected array $OperationInfo;
+    protected ?array $OperationInfo = [];
 
     protected Stamp $Stamp;
 
