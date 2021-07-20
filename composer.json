@@ -5,11 +5,13 @@
         "PHP": "^8.0",
         "ttbooking/mapper-php": "^2.3",
         "ramsey/uuid": "^4.0",
-        "guzzlehttp/guzzle": "^7.0"
+        "guzzlehttp/guzzle": "^7.0",
+        "psr/log": "^1.0.1"
     },
     "require-dev": {
       "ext-dom": "*",
-      "phpunit/phpunit": "^9.5"
+      "phpunit/phpunit": "^9.5",
+      "monolog/monolog": "^2.3"
     },
     "autoload": {
       "psr-4": {

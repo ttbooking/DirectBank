@@ -6,8 +6,10 @@ namespace TTBooking\DirectBank;
 
 use GuzzleHttp\Handler\CurlHandler;
 use GuzzleHttp\HandlerStack;
+use GuzzleHttp\MessageFormatter;
 use GuzzleHttp\Middleware;
 use Psr\Http\Message\RequestInterface;
+use Psr\Log\LoggerInterface;
 use TTBooking\DirectBank\Dictionary\DefaultValue;
 use GuzzleHttp\Client as HttpClient;
 use TTBooking\DirectBank\Exceptions\ClientException;
@@ -25,7 +27,7 @@ class Client implements ClientInterface
         'url' => null,
     ];
 
-    public function __construct(array $settings)
+    public function __construct(array $settings, private ?LoggerInterface $logger = null)
     {
         $this->settings = array_replace($this->settings, $settings);
     }
@@ -82,6 +84,10 @@ class Client implements ClientInterface
     {
         $handler = new CurlHandler();
         $stack = HandlerStack::create($handler);
+
+        if ($this->logger) {
+            $stack->push(Middleware::log($this->logger, new MessageFormatter(MessageFormatter::DEBUG)));
+        }
 
         if ($withAuth) {
             $stack->push(Middleware::mapRequest(function (RequestInterface $request) {
