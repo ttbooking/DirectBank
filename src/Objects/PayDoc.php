@@ -29,7 +29,7 @@ class PayDoc
     protected ?CollectionOrderApp $CollectionOrder = null;
 
     //Данные платежного ордера
-    protected ?PaymentOrder $PaymentOrderApp = null;
+    protected ?PaymentOrder $PaymentOrder = null;
 
     //Данные банковского ордера
     protected ?BankOrderApp $BankOrder = null;
@@ -77,9 +77,9 @@ class PayDoc
         return $this->CollectionOrder;
     }
 
-    public function getPaymentOrderApp(): ?PaymentOrder
+    public function getPaymentOrder(): ?PaymentOrder
     {
-        return $this->PaymentOrderApp;
+        return $this->PaymentOrder;
     }
 
     public function getBankOrder(): ?BankOrderApp
