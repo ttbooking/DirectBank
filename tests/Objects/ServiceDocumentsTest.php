@@ -110,6 +110,29 @@ final class ServiceDocumentsTest extends TestCase
         $this->assertValid($official->toXml(), 'StatusRequest');
     }
 
+    public function testCancelationRequest()
+    {
+        $request = (new CancelationRequest())
+            ->setId('e8caa148-82a3-446d-a10f-ff82ad514b7e')
+            ->setCreationDate('2016-04-22T10:11:25')
+            ->setSender(self::customer())
+            ->setRecipient(self::bank())
+            ->setExtID('05688096-0806-4ef0-af4c-572f75dbaf7c');
+
+        $this->assertValid((string) $request, 'CancelationRequest');
+        $this->assertNull($request->getReason());
+
+        $request->setReason('Ошибка в реквизитах')->setDigest(new DigestType(base64_encode('digest'), '1.0'));
+        $this->assertValid((string) $request, 'CancelationRequest');
+
+        $official = (new XmlModelMapper())->map(self::fixture('1c/CancelationRequest.xml'), new CancelationRequest());
+
+        $this->assertSame('05688096-0806-4ef0-af4c-572f75dbaf7c', $official->getExtID());
+        $this->assertSame('Описание причины отзыва', $official->getReason());
+        $this->assertNull($official->getDigest());
+        $this->assertValid($official->toXml(), 'CancelationRequest');
+    }
+
     public function testProbe()
     {
         $probe = (new Probe())
