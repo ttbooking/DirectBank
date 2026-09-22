@@ -16,6 +16,7 @@ use TTBooking\DirectBank\Dictionary\ErrorCode;
 use GuzzleHttp\Client as HttpClient;
 use TTBooking\DirectBank\Exceptions\ClientException;
 use TTBooking\DirectBank\Exceptions\InvalidSettingsException;
+use TTBooking\DirectBank\Exceptions\OtpRequiredException;
 use TTBooking\DirectBank\Exceptions\UnexpectedResponseException;
 use TTBooking\DirectBank\Objects\GetPacketListResponseType;
 use TTBooking\DirectBank\Objects\Packet;
@@ -23,6 +24,9 @@ use TTBooking\DirectBank\Objects\ResultBank;
 
 class Client implements ClientInterface
 {
+    //Методы аутентификации: выполняются вне сессии
+    const AUTHENTICATION_METHODS = ['Logon', 'LogonOTP'];
+
     protected array $settings = [
         'customerId' => null,
         'apiVersion' => DefaultValue::FORMAT_VERSION,
@@ -42,6 +46,9 @@ class Client implements ClientInterface
         $this->validateSettings($this->settings);
     }
 
+    /**
+     * @throws \TTBooking\DirectBank\Exceptions\OtpRequiredException банк требует подтвердить вход одноразовым паролем
+     */
     public function createSession(): string
     {
         $result = $this->invoke('POST', 'Logon');
@@ -49,7 +56,28 @@ class Client implements ClientInterface
         $response = $result->getSuccess()->getLogonResponse()
             ?? throw new UnexpectedResponseException('Bank response to Logon has no LogonResponse.');
 
-        return $response->getSID();
+        if ($response->isOtpRequired()) {
+            throw OtpRequiredException::fromLogonResponse($response);
+        }
+
+        return $this->settings['sessionId'] = $response->getSID();
+    }
+
+    /**
+     * Подтверждение входа одноразовым паролем (LogonOTP)
+     *
+     * @param string $sessionId идентификатор неавторизованной сессии из OtpRequiredException
+     * @param string $otp одноразовый пароль, полученный клиентом
+     * @return string идентификатор авторизованной сессии
+     */
+    public function confirmOtp(string $sessionId, string $otp): string
+    {
+        $result = $this->invoke('POST', 'LogonOTP', headers: ['sid' => $sessionId, 'otp' => $otp]);
+
+        $response = $result->getSuccess()->getLogonResponse()
+            ?? throw new UnexpectedResponseException('Bank response to LogonOTP has no LogonResponse.');
+
+        return $this->settings['sessionId'] = $response->getSID();
     }
 
     public function sendPack(Packet $packet): string
@@ -137,20 +165,22 @@ class Client implements ClientInterface
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @throws \TTBooking\DirectBank\Exceptions\ClientException
      */
-    protected function invoke(string $method, string $path, ?string $body = null, array $query = [], bool $reauthenticate = true): ResultBank
+    protected function invoke(string $method, string $path, ?string $body = null, array $query = [], bool $reauthenticate = true, array $headers = []): ResultBank
     {
-        $client = $this->getHttpClient($this->settings, $path !== 'Logon');
+        $withSession = ! in_array($path, self::AUTHENTICATION_METHODS, true);
 
-        $response = $client->request($method, $path, ['body' => $body, 'query' => $query]);
+        $client = $this->getHttpClient($this->settings, $withSession, $path === 'Logon');
+
+        $response = $client->request($method, $path, ['body' => $body, 'query' => $query, 'headers' => $headers]);
 
         $result = $this->parseResult($response);
 
         if ($error = $result?->getError()) {
             // Сессия истекла или недействительна: входим заново и повторяем запрос один раз
-            if ($reauthenticate && $path !== 'Logon' && in_array($error->getCode(), ErrorCode::REAUTHENTICATE, true)) {
+            if ($reauthenticate && $withSession && in_array($error->getCode(), ErrorCode::REAUTHENTICATE, true)) {
                 $this->settings['sessionId'] = null;
 
-                return $this->invoke($method, $path, $body, $query, false);
+                return $this->invoke($method, $path, $body, $query, false, $headers);
             }
 
             throw ClientException::fromError($error);
@@ -199,10 +229,13 @@ class Client implements ClientInterface
     }
 
     /**
-     * @param bool $withSession запрос в рамках сессии (SID); иначе запрос аутентификации (Logon)
+     * @param bool $withSession запрос в рамках сессии: SID, при отсутствии — предварительный Logon
+     * @param bool|null $withCredentials логин, пароль и AvailableAPIVersion (Logon); по умолчанию — для запросов вне сессии
      */
-    protected function getHttpClient(array $settings, $withSession = false): HttpClient
+    protected function getHttpClient(array $settings, $withSession = false, ?bool $withCredentials = null): HttpClient
     {
+        $withCredentials ??= ! $withSession;
+
         $handler = $this->settings['handler'] ?? new CurlHandler();
         $stack = HandlerStack::create($handler);
 
@@ -213,10 +246,7 @@ class Client implements ClientInterface
         if ($withSession) {
             $stack->push(Middleware::mapRequest(function (RequestInterface $request) {
                 if(! $request->hasHeader('sid')) {
-                    $sessionId = $this->createSession();
-                    $this->settings['sessionId'] = $sessionId;
-
-                    return $request->withHeader('sid', $sessionId);
+                    return $request->withHeader('sid', $this->createSession());
                 }
                 return $request;
             }));
@@ -241,11 +271,11 @@ class Client implements ClientInterface
         ];
 
         // Логин и пароль передаются только при аутентификации, дальше запросы идут с SID
-        if ($withSession) {
-            if ($settings['sessionId'] ?? null) {
-                $headers['sid'] = $settings['sessionId'];
-            }
-        } else {
+        if ($withSession && ($settings['sessionId'] ?? null)) {
+            $headers['sid'] = $settings['sessionId'];
+        }
+
+        if ($withCredentials) {
             if (isset($settings['availableApiVersion'])) {
                 $headers['availableapiversion'] = $settings['availableApiVersion'];
             }

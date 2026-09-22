@@ -8,6 +8,7 @@ use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
 use TTBooking\DirectBank\Exceptions\ClientException;
+use TTBooking\DirectBank\Exceptions\OtpRequiredException;
 use TTBooking\DirectBank\Exceptions\UnexpectedResponseException;
 use TTBooking\DirectBank\Fixture\PacketFixture;
 
@@ -371,6 +372,87 @@ final class ClientHttpTest extends TestCase
         }
 
         $this->assertCount(1, $this->requests);
+    }
+
+    protected static function logonOtp(string $sid = 'SID-UNAUTHORIZED', string $otp = '<OTP phoneMask="7916***6465" code="1234"/>'): Response
+    {
+        return self::success("<LogonResponse><SID>$sid</SID><ExtraAuth>$otp</ExtraAuth></LogonResponse>");
+    }
+
+    public function testOtpRequired()
+    {
+        $this->mock->append(
+            self::logonOtp(),
+            self::logon('SID-2'),
+            self::success('<SendPacketResponse><ID>PACK-1</ID></SendPacketResponse>'),
+        );
+
+        $client = $this->createClient();
+
+        try {
+            $client->createSession();
+            $this->fail('OtpRequiredException expected');
+        } catch (OtpRequiredException $e) {
+            $this->assertSame('SID-UNAUTHORIZED', $e->getSessionId());
+            $this->assertSame('7916***6465', $e->getPhoneMask());
+            $this->assertSame('1234', $e->getSessionCode());
+        }
+
+        $this->assertSame('SID-2', $client->confirmOtp($e->getSessionId(), '034494'));
+        $this->assertSame('PACK-1', $client->sendPack(PacketFixture::createPacket()));
+
+        [, $logonOtp, $sendPack] = $this->requests;
+
+        $this->assertSame('POST', $logonOtp->getMethod());
+        $this->assertStringEndsWith('/LogonOTP', $logonOtp->getUri()->getPath());
+        $this->assertSame('SID-UNAUTHORIZED', $logonOtp->getHeaderLine('SID'));
+        $this->assertSame('034494', $logonOtp->getHeaderLine('OTP'));
+        $this->assertSame('40702810000000000000', $logonOtp->getHeaderLine('CustomerID'));
+        $this->assertFalse($logonOtp->hasHeader('Authorization'));
+        $this->assertSame('', (string) $logonOtp->getBody());
+
+        // После подтверждения запросы идут с авторизованным SID без повторного Logon
+        $this->assertCount(3, $this->requests);
+        $this->assertSame('SID-2', $sendPack->getHeaderLine('SID'));
+    }
+
+    public function testOtpRequiredOnImplicitLogon()
+    {
+        $this->mock->append(self::logonOtp('SID-UNAUTHORIZED', '<OTP/>'));
+
+        try {
+            $this->createClient()->sendPack(PacketFixture::createPacket());
+            $this->fail('OtpRequiredException expected');
+        } catch (OtpRequiredException $e) {
+            $this->assertSame('SID-UNAUTHORIZED', $e->getSessionId());
+            $this->assertNull($e->getPhoneMask());
+        }
+
+        $this->assertCount(1, $this->requests);
+    }
+
+    public function testInvalidOtp()
+    {
+        $this->mock->append(self::error('1204', 'Некорректный ОТР'));
+
+        try {
+            $this->createClient()->confirmOtp('SID-UNAUTHORIZED', '000000');
+            $this->fail('ClientException expected');
+        } catch (ClientException $e) {
+            $this->assertSame('1204', $e->getBankCode());
+        }
+    }
+
+    public function testCreateSessionStoresSessionId()
+    {
+        $this->mock->append(self::logon('SID-1'), self::success('<SendPacketResponse><ID>PACK-1</ID></SendPacketResponse>'));
+
+        $client = $this->createClient();
+        $client->createSession();
+        $client->sendPack(PacketFixture::createPacket());
+
+        $this->assertCount(2, $this->requests);
+        $this->assertSame('SID-1', $this->requests[1]->getHeaderLine('SID'));
     }
 
     public function testBankErrorWithHttpErrorStatus()
