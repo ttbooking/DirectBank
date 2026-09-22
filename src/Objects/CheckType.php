@@ -10,7 +10,10 @@ class CheckType extends OtherPaymentDataType
 
     protected ?DataPrintingType $DataPrinting = null;
 
-    protected ?DetailsType $Details = null;
+    /**
+     * @var DetailsType[]
+     */
+    protected array $Details = [];
 
     public function getPerson(): ?PersonType
     {
@@ -22,7 +25,10 @@ class CheckType extends OtherPaymentDataType
         return $this->DataPrinting;
     }
 
-    public function getDetails(): ?DetailsType
+    /**
+     * @return DetailsType[]
+     */
+    public function getDetails(): array
     {
         return $this->Details;
     }

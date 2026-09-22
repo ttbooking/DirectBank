@@ -119,6 +119,55 @@ class StatementTest extends TestCase
         $this->assertSame(7.0, $operation->getPayDoc()->getInnerDoc()->getSum());
     }
 
+    /**
+     * Выписка со всеми вариантами PayDoc и всеми необязательными элементами
+     */
+    public function testAllDocKinds()
+    {
+        $xml = file_get_contents(__DIR__ . '/../Fixture/xml/statement_all_doc_kinds.xml');
+
+        $this->assertValid($xml);
+
+        $statement = new Statement();
+        $statement->mapFromXml($xml);
+
+        $payDocs = [];
+        foreach ($statement->getData()->getOperationInfo() as $operation) {
+            $payDocs[$operation->getPayDoc()->getDocKind()] = $operation->getPayDoc();
+        }
+
+        $this->assertSame(['10', '11', '12', '17', '18', '16', '13', '24', '25'], array_map('strval', array_keys($payDocs)));
+
+        $check = $payDocs['25']->getCheck();
+        $this->assertSame(9.0, $check->getSum());
+        $this->assertSame('0001', $check->getDataPrinting()->getCheckNumber());
+        $this->assertCount(2, $check->getDetails());
+        $this->assertSame('40', $check->getDetails()[0]->getSymbol());
+        $this->assertSame('zp', $check->getDetails()[0]->getPurpose());
+        $this->assertSame('53', $check->getDetails()[1]->getSymbol());
+        $this->assertNull($check->getDetails()[1]->getPurpose());
+        $this->assertSame(5.0, $check->getDetails()[1]->getSum());
+    }
+
+    public function testCheckWithSingleDetails()
+    {
+        $xml = str_replace(
+            '<Details><Symbol>53</Symbol><Sum>5</Sum></Details>',
+            '',
+            file_get_contents(__DIR__ . '/../Fixture/xml/statement_all_doc_kinds.xml')
+        );
+
+        $statement = new Statement();
+        $statement->mapFromXml($xml);
+
+        foreach ($statement->getData()->getOperationInfo() as $operation) {
+            if ($check = $operation->getPayDoc()->getCheck()) {
+                $this->assertCount(1, $check->getDetails());
+                $this->assertSame('40', $check->getDetails()[0]->getSymbol());
+            }
+        }
+    }
+
     protected function assertValid(string $xml): void
     {
         $dom = new \DOMDocument();
