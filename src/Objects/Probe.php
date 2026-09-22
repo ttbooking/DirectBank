@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace TTBooking\DirectBank\Objects;
 
-use Traits\ConvertibleTrait;
+use TTBooking\DirectBank\Mapper\ConvertibleTrait;
 use TTBooking\DirectBank\Dictionary\DefaultValue;
 
 /**

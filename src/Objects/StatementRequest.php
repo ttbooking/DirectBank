@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace TTBooking\DirectBank\Objects;
 
 use Mapper\ModelMapper;
-use Traits\ConvertibleTrait;
+use TTBooking\DirectBank\Mapper\ConvertibleTrait;
 use TTBooking\DirectBank\Attributes\Name;
 use TTBooking\DirectBank\Dictionary\DefaultValue;
 
