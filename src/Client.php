@@ -9,11 +9,13 @@ use GuzzleHttp\HandlerStack;
 use GuzzleHttp\MessageFormatter;
 use GuzzleHttp\Middleware;
 use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
 use TTBooking\DirectBank\Dictionary\DefaultValue;
 use GuzzleHttp\Client as HttpClient;
 use TTBooking\DirectBank\Exceptions\ClientException;
 use TTBooking\DirectBank\Exceptions\InvalidSettingsException;
+use TTBooking\DirectBank\Exceptions\UnexpectedResponseException;
 use TTBooking\DirectBank\Objects\Packet;
 use TTBooking\DirectBank\Objects\ResultBank;
 
@@ -39,14 +41,20 @@ class Client implements ClientInterface
     {
         $result = $this->invoke('POST', 'Logon');
 
-        return $result->getSuccess()->getLogonResponse()->getSID();
+        $response = $result->getSuccess()->getLogonResponse()
+            ?? throw new UnexpectedResponseException('Bank response to Logon has no LogonResponse.');
+
+        return $response->getSID();
     }
 
     public function sendPack(Packet $packet): string
     {
         $result = $this->invoke('POST', 'SendPack', (string) $packet);
 
-        return $result->getSuccess()->getSendPacketResponse()->getID();
+        $response = $result->getSuccess()->getSendPacketResponse()
+            ?? throw new UnexpectedResponseException('Bank response to SendPack has no SendPacketResponse.');
+
+        return $response->getID();
     }
 
     /**
@@ -63,7 +71,8 @@ class Client implements ClientInterface
     {
         $result = $this->invoke('GET', 'GetPack', query: ['id' => $uid]);
 
-        return $result->getSuccess()->getGetPacketResponse();
+        return $result->getSuccess()->getGetPacketResponse()
+            ?? throw new UnexpectedResponseException('Bank response to GetPack has no GetPacketResponse.');
     }
 
     /**
@@ -91,6 +100,8 @@ class Client implements ClientInterface
     }
 
     /**
+     * @return ResultBank с заполненным Success
+     *
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @throws \TTBooking\DirectBank\Exceptions\ClientException
      */
@@ -100,11 +111,49 @@ class Client implements ClientInterface
 
         $response = $client->request($method, $path, ['body' => $body, 'query' => $query]);
 
-        $result = new ResultBank();
-        $result->mapFromXml((string) $response->getBody());
+        $result = $this->parseResult($response);
 
-        if($error = $result->getError()) {
+        if ($error = $result?->getError()) {
             throw ClientException::fromError($error);
+        }
+
+        if ($response->getStatusCode() >= 400) {
+            throw UnexpectedResponseException::fromResponse(
+                sprintf('Bank responded with HTTP %d %s and no error description.', $response->getStatusCode(), $response->getReasonPhrase()),
+                $response
+            );
+        }
+
+        if (! $result?->getSuccess()) {
+            throw UnexpectedResponseException::fromResponse(sprintf('Bank response to %s has neither Success nor Error.', $path), $response);
+        }
+
+        return $result;
+    }
+
+    /**
+     * Ошибка банка приходит в теле ResultBank при любом HTTP-статусе,
+     * поэтому тело разбирается до проверки статуса.
+     *
+     * @throws \TTBooking\DirectBank\Exceptions\UnexpectedResponseException
+     */
+    protected function parseResult(ResponseInterface $response): ?ResultBank
+    {
+        $body = (string) $response->getBody();
+
+        if (trim($body) === '') {
+            return null;
+        }
+
+        try {
+            $result = new ResultBank();
+            $result->mapFromXml($body);
+        } catch (\Throwable $e) {
+            if ($response->getStatusCode() >= 400) {
+                return null;
+            }
+
+            throw UnexpectedResponseException::fromResponse('Unable to parse bank response: ' . $e->getMessage(), $response, $e);
         }
 
         return $result;
@@ -150,6 +199,7 @@ class Client implements ClientInterface
                 $settings['password'],
             ],
             'verify' => $this->settings['verify'] ?? true,
+            'http_errors' => false,
             'handler' => $stack,
         ]);
     }
