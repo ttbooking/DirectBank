@@ -197,6 +197,53 @@ final class ClientHttpTest extends TestCase
         $this->assertNull($client->getPackList());
     }
 
+    public function testGetPackListResponse()
+    {
+        $this->mock->append(
+            self::success('<GetPacketListResponse TimeStampLastPacket="2026-09-22T10:15:30+05:00"><PacketID>A</PacketID><PacketID>B</PacketID></GetPacketListResponse>'),
+            self::success('<GetPacketListResponse TimeStampLastPacket="2026-09-22T10:15:30+05:00"/>'),
+            self::success('<GetPacketListResponse/>'),
+        );
+
+        $client = $this->createClient(['sessionId' => 'SID-0']);
+
+        $list = $client->getPackListResponse();
+        $this->assertSame(['A', 'B'], $list->getPacketID());
+        $this->assertSame('2026-09-22T10:15:30+05:00', $list->getTimeStampLastPacket());
+        $this->assertSame('2026-09-22 10:15:30 +05:00', $list->getTimeStampLastPacketDateTime()->format('Y-m-d H:i:s P'));
+
+        // Отметку из ответа передаём в следующий запрос как есть: время сервера банка без перевода в другой пояс
+        $list = $client->getPackListResponse($list->getTimeStampLastPacket());
+        $this->assertSame([], $list->getPacketID());
+
+        $list = $client->getPackListResponse(new \DateTimeImmutable('2026-09-22 10:15:30'));
+        $this->assertSame([], $list->getPacketID());
+        $this->assertNull($list->getTimeStampLastPacket());
+        $this->assertNull($list->getTimeStampLastPacketDateTime());
+
+        $query = [];
+        parse_str($this->requests[0]->getUri()->getQuery(), $query);
+        $this->assertSame([], $query);
+        parse_str($this->requests[1]->getUri()->getQuery(), $query);
+        $this->assertSame(['date' => '22.09.2026 10:15:30'], $query);
+        parse_str($this->requests[2]->getUri()->getQuery(), $query);
+        $this->assertSame(['date' => '22.09.2026 10:15:30'], $query);
+    }
+
+    public function testGetPackListEmptyWithTimeStamp()
+    {
+        $this->mock->append(self::success('<GetPacketListResponse TimeStampLastPacket="2026-09-22T10:00:00"/>'));
+
+        $this->assertSame([], $this->createClient(['sessionId' => 'SID-0'])->getPackList());
+    }
+
+    public function testGetPackListResponseInvalidTimestamp()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        $this->createClient(['sessionId' => 'SID-0'])->getPackListResponse('not a date');
+    }
+
     public function testGetPackListDate()
     {
         $this->mock->append(self::success('<GetPacketListResponse TimeStampLastPacket="2026-09-22T10:00:00"><PacketID>A</PacketID></GetPacketListResponse>'));

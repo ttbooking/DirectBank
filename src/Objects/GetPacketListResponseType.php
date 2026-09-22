@@ -16,9 +16,18 @@ class GetPacketListResponseType
      */
     protected array $PacketID = [];
 
+    /**
+     * Отметка времени последнего контейнера в списке (xsd:dateTime, по часам сервера банка).
+     * Передаётся в следующий запрос списка, чтобы получить только новые контейнеры.
+     */
     public function getTimeStampLastPacket(): ?string
     {
         return $this->TimeStampLastPacket;
+    }
+
+    public function getTimeStampLastPacketDateTime(): ?\DateTimeImmutable
+    {
+        return $this->TimeStampLastPacket === null ? null : new \DateTimeImmutable($this->TimeStampLastPacket);
     }
 
     /**

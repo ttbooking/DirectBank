@@ -17,6 +17,7 @@ use GuzzleHttp\Client as HttpClient;
 use TTBooking\DirectBank\Exceptions\ClientException;
 use TTBooking\DirectBank\Exceptions\InvalidSettingsException;
 use TTBooking\DirectBank\Exceptions\UnexpectedResponseException;
+use TTBooking\DirectBank\Objects\GetPacketListResponseType;
 use TTBooking\DirectBank\Objects\Packet;
 use TTBooking\DirectBank\Objects\ResultBank;
 
@@ -66,9 +67,34 @@ class Client implements ClientInterface
      */
     public function getPackList(?\DateTimeInterface $dateTime = null): ?array
     {
-        $result = $this->invoke('GET', 'GetPackList', query: ['date' => $dateTime?->format(DefaultValue::TIMESTAMP_FORMAT)]);
+        return $this->requestPackList($dateTime)?->getPacketID();
+    }
 
-        return $result->getSuccess()->getGetPacketListResponse()?->getPacketID();
+    /**
+     * Список контейнеров вместе с отметкой времени последнего из них.
+     *
+     * @param \DateTimeInterface|string|null $since отметка времени по часам сервера банка,
+     *        например TimeStampLastPacket из предыдущего ответа
+     */
+    public function getPackListResponse(\DateTimeInterface|string|null $since = null): GetPacketListResponseType
+    {
+        if (is_string($since)) {
+            try {
+                $since = new \DateTimeImmutable($since);
+            } catch (\Exception $e) {
+                throw new \InvalidArgumentException(sprintf('Invalid timestamp "%s".', $since), 0, $e);
+            }
+        }
+
+        return $this->requestPackList($since) ?? new GetPacketListResponseType();
+    }
+
+    protected function requestPackList(?\DateTimeInterface $since): ?GetPacketListResponseType
+    {
+        // Время сервера банка передаётся как есть, без перевода в другой часовой пояс
+        $result = $this->invoke('GET', 'GetPackList', query: ['date' => $since?->format(DefaultValue::TIMESTAMP_FORMAT)]);
+
+        return $result->getSuccess()->getGetPacketListResponse();
     }
 
     public function getPack(string $uid): Packet
