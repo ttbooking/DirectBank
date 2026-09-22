@@ -82,6 +82,48 @@ final class ClientHttpTest extends TestCase
         $this->assertFalse($request->hasHeader('sid'));
     }
 
+    public function testHeaders()
+    {
+        $this->mock->append(self::logon(), self::success('<SendPacketResponse><ID>PACK-1</ID></SendPacketResponse>'));
+
+        $this->createClient(['sessionId' => 'SID-0'])->createSession();
+        $this->createClient(['sessionId' => 'SID-0'])->sendPack(PacketFixture::createPacket());
+
+        [$logon, $sendPack] = $this->requests;
+
+        foreach ([$logon, $sendPack] as $request) {
+            $this->assertSame('application/xml; charset=utf-8', $request->getHeaderLine('Content-Type'));
+            $this->assertSame('40702810000000000000', $request->getHeaderLine('CustomerID'));
+            $this->assertSame('2.2.2', $request->getHeaderLine('APIVersion'));
+            $this->assertStringStartsWith('GuzzleHttp/', $request->getHeaderLine('User-Agent'));
+        }
+
+        // Logon: логин и пароль, доступная версия API, без SID
+        $this->assertSame('Basic ' . base64_encode('user:secret'), $logon->getHeaderLine('Authorization'));
+        $this->assertSame('2.2.2', $logon->getHeaderLine('AvailableAPIVersion'));
+        $this->assertFalse($logon->hasHeader('SID'));
+
+        // Запросы в рамках сессии: SID, без логина и пароля
+        $this->assertSame('SID-0', $sendPack->getHeaderLine('SID'));
+        $this->assertFalse($sendPack->hasHeader('Authorization'));
+        $this->assertFalse($sendPack->hasHeader('AvailableAPIVersion'));
+    }
+
+    public function testHeadersFromSettings()
+    {
+        $this->mock->append(self::logon());
+
+        $this->createClient([
+            'apiVersion' => '2.1.1',
+            'availableApiVersion' => null,
+            'userAgent' => '1C+Enterprise/8.3',
+        ])->createSession();
+
+        $this->assertSame('2.1.1', $this->requests[0]->getHeaderLine('APIVersion'));
+        $this->assertFalse($this->requests[0]->hasHeader('AvailableAPIVersion'));
+        $this->assertSame('1C+Enterprise/8.3', $this->requests[0]->getHeaderLine('User-Agent'));
+    }
+
     public function testLogonBeforeFirstRequest()
     {
         $this->mock->append(
