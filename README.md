@@ -38,6 +38,8 @@ $client = new Client([
     'login'      => 'user',
     'password'   => 'secret',
     'apiVersion' => DefaultValue::FORMAT_VERSION,                 // по умолчанию '2.2.2'
+    'availableApiVersion' => DefaultValue::FORMAT_VERSION,        // заголовок AvailableAPIVersion в Logon, null — не передавать
+    'userAgent'  => null,                                         // заголовок User-Agent, по умолчанию стандартный Guzzle
     'sessionId'  => null,                                         // можно передать уже полученный SID
     'verify'     => true,                                         // проверка SSL-сертификата
     'handler'    => null,                                         // свой Guzzle handler, например MockHandler в тестах
@@ -45,8 +47,8 @@ $client = new Client([
 ```
 
 Настройки проверяются в конструкторе: `url`, `customerId`, `login`, `password` и `apiVersion`
-должны быть непустыми строками, `sessionId` — строкой или `null`, `verify` — булевым значением
-или путём к CA-бандлу, `handler` — callable. Иначе выбрасывается
+должны быть непустыми строками, `availableApiVersion`, `userAgent` и `sessionId` — непустой строкой
+или `null`, `verify` — булевым значением или путём к CA-бандлу, `handler` — callable. Иначе выбрасывается
 `TTBooking\DirectBank\Exceptions\InvalidSettingsException` (наследник `\InvalidArgumentException`)
 с именем неверной настройки.
 
@@ -68,17 +70,51 @@ $client = new Client($settings, $logger); // Psr\Log\LoggerInterface
 $sid = $client->createSession();
 ```
 
+Логин и пароль передаются только в `Logon`, остальные запросы идут с `SID`.
+
+### Вход с одноразовым паролем
+
+Если банк требует подтвердить вход одноразовым паролем (OTP), `createSession()` — и неявный
+вход перед первым запросом — выбрасывает `TTBooking\DirectBank\Exceptions\OtpRequiredException`.
+Банк в этот момент отправляет пароль клиенту, а вход подтверждается методом `confirmOtp()`:
+
+```php
+use TTBooking\DirectBank\Exceptions\OtpRequiredException;
+
+try {
+    $client->createSession();
+} catch (OtpRequiredException $e) {
+    $e->getPhoneMask();   // маска телефона, если банк её прислал, например '7916***6465'
+    $e->getSessionCode(); // короткий код сессии для показа пользователю, если есть
+
+    $client->confirmOtp($e->getSessionId(), $otpFromUser); // дальше запросы идут с авторизованным SID
+}
+```
+
 ### Методы клиента
 
 | Метод | Запрос DirectBank | Результат |
 |---|---|---|
 | `createSession(): string` | `POST Logon` | идентификатор сессии (SID) |
+| `confirmOtp(string $sessionId, string $otp): string` | `POST LogonOTP` | идентификатор авторизованной сессии |
 | `sendPack(Packet $packet): string` | `POST SendPack` | идентификатор принятого контейнера |
 | `getPackList(?DateTimeInterface $date = null): ?array` | `GET GetPackList` | список идентификаторов контейнеров, готовых к получению |
+| `getPackListResponse(DateTimeInterface\|string\|null $since = null)` | `GET GetPackList` | список контейнеров и отметка времени последнего из них |
 | `getPack(string $id): Packet` | `GET GetPack` | транспортный контейнер |
 
-Отметка времени для `getPackList()` задаётся по часам сервера банка и передаётся
-в формате `dd.MM.yyyy HH:mm:ss`.
+Отметка времени для списка контейнеров задаётся по часам сервера банка и передаётся
+в формате `dd.MM.yyyy HH:mm:ss`. Чтобы получать только новые контейнеры, передавайте
+в следующий запрос `TimeStampLastPacket` из предыдущего ответа:
+
+```php
+$list = $client->getPackListResponse($lastTimestamp); // null — все контейнеры
+
+foreach ($list->getPacketID() as $id) {
+    // $client->getPack($id) ...
+}
+
+$lastTimestamp = $list->getTimeStampLastPacket() ?? $lastTimestamp; // сохранить до следующего запроса
+```
 
 ### Ошибки
 
@@ -88,6 +124,9 @@ $sid = $client->createSession();
 - `TTBooking\DirectBank\Exceptions\UnexpectedResponseException` (наследник `ClientException`) —
   ответ не удалось разобрать или в нём нет ожидаемых данных. HTTP-ответ — `getResponse()`,
   `getCode()` — HTTP-статус.
+- `TTBooking\DirectBank\Exceptions\OtpRequiredException` (наследник `ClientException`) —
+  банк требует подтвердить вход одноразовым паролем, см. выше.
+- Коды ошибок банка — константы `TTBooking\DirectBank\Dictionary\ErrorCode`.
 - Сетевые ошибки (нет соединения, таймаут) пробрасываются как исключения Guzzle.
 
 ## Примеры
@@ -148,29 +187,65 @@ $packetId = $client->sendPack($packet);
 ```php
 use Mapper\XmlModelMapper;
 use TTBooking\DirectBank\Dictionary\DocKind;
-use TTBooking\DirectBank\Objects\{Statement, StatusPacketNotice};
+use TTBooking\DirectBank\Dictionary\DocStatus;
+use TTBooking\DirectBank\Objects\{Settings, Statement, StatusDocNotice, StatusPacketNotice};
 
 $mapper = new XmlModelMapper();
 
 foreach ($client->getPackList() ?? [] as $id) {
     $pack = $client->getPack($id);
-    $xml  = base64_decode($pack->getDocument()->getData());
 
-    $document = match ($pack->getDocument()->getDockind()) {
-        DocKind::SHIPPING_CONTAINER_HANDLING_STATUS_NOTIFICATION => $mapper->map($xml, new StatusPacketNotice()),
-        DocKind::BANK_STATEMENT => $mapper->map($xml, new Statement()),
-        default => null,
-    };
+    foreach ($pack->getDocuments() as $packDocument) {
+        $xml = base64_decode($packDocument->getData());
 
-    if ($document instanceof Statement) {
-        $data = $document->getData();
-        $data->getClosingBalance();
-        foreach ($data->getOperationInfo() as $operation) {
-            // ...
+        $document = match ($packDocument->getDockind()) {
+            DocKind::STATUS_PACKET_NOTICE => $mapper->map($xml, new StatusPacketNotice()),
+            DocKind::STATUS_DOC_NOTICE => $mapper->map($xml, new StatusDocNotice()),
+            DocKind::SETTINGS => $mapper->map($xml, new Settings()),
+            DocKind::BANK_STATEMENT => $mapper->map($xml, new Statement()),
+            default => null,
+        };
+
+        if ($document instanceof StatusDocNotice) {
+            $document->getExtID();                              // документ, о котором извещение
+            $document->getResult()->getStatus()?->getCode();    // DocStatus::EXECUTED и т.д.
+            $document->getResult()->getError()?->getDescription(); // или ошибка обработки
+        }
+
+        if ($document instanceof Statement) {
+            $data = $document->getData();
+            $data->getClosingBalance();
+            foreach ($data->getOperationInfo() as $operation) {
+                // ...
+            }
         }
     }
 }
 ```
+
+### Служебные документы
+
+Исходящие служебные документы собираются так же, как запрос выписки, и передаются
+в контейнере с соответствующим видом:
+
+| Документ | Класс | Вид ЭД |
+|---|---|---|
+| Запрос о состоянии электронного документа | `StatusRequest` (`setExtID()` — ИД документа) | `DocKind::STATUS_REQUEST` |
+| Запрос-зонд | `Probe` | `DocKind::PROBE` |
+
+Входящие: `StatusPacketNotice` (`01`), `StatusDocNotice` (`02`), `Settings` (`06`), `Statement` (`15`).
+
+## Справочники
+
+Классификаторы стандарта в пространстве имён `TTBooking\DirectBank\Dictionary`:
+
+| Класс | Содержимое |
+|---|---|
+| `DocKind` | коды видов электронных документов, `DocKind::REQUIRED` — обязательные |
+| `DocStatus` | коды статусов электронных документов |
+| `PacketStatus` | коды статусов транспортных контейнеров |
+| `StatementType` | типы выписок |
+| `ErrorCode` | коды ошибок банковского сервиса |
 
 ## Виды документов
 
@@ -178,7 +253,12 @@ foreach ($client->getPackList() ?? [] as $id) {
 
 | Константа | Код | Документ |
 |---|---|---|
-| `SHIPPING_CONTAINER_HANDLING_STATUS_NOTIFICATION` | `01` | Извещение о состоянии обработки транспортного контейнера |
+| `STATUS_PACKET_NOTICE` | `01` | Извещение о состоянии обработки транспортного контейнера |
+| `STATUS_DOC_NOTICE` | `02` | Извещение о состоянии электронного документа * |
+| `STATUS_REQUEST` | `03` | Запрос о состоянии электронного документа * |
+| `CANCELATION_REQUEST` | `04` | Запрос об отзыве электронного документа |
+| `PROBE` | `05` | Запрос-зонд * |
+| `SETTINGS` | `06` | Настройки обмена с банком * |
 | `PAY_DOC_RU` | `10` | Платёжное поручение |
 | `PAY_REQUEST` | `11` | Платёжное требование |
 | `COLLECTION_ORDER` | `12` | Инкассовое поручение |
@@ -188,8 +268,13 @@ foreach ($client->getPackList() ?? [] as $id) {
 | `MEM_ORDER` | `16` | Мемориальный ордер |
 | `PAYMENT_ORDER` | `17` | Платёжный ордер |
 | `BANK_ORDER` | `18` | Банковский ордер |
+| `WAGES_*` | `19`–`23` | Документы зарплатного проекта |
 | `CASH_CONTRIBUTION` | `24` | Объявление на взнос наличными |
 | `CHECK` | `25` | Денежный чек |
+| `CURRENCY_TRANSFER_ORDER` | `30` | Поручение на перевод валюты |
+| `CURRENCY_STATEMENT` | `35` | Выписка по валютному счёту |
+
+\* обязательные по стандарту. `SHIPPING_CONTAINER_HANDLING_STATUS_NOTIFICATION` — прежнее имя `STATUS_PACKET_NOTICE`.
 
 XSD-схемы формата лежат в [`tests/Fixture/xsd`](tests/Fixture/xsd).
 
