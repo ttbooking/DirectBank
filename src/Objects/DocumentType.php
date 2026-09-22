@@ -7,6 +7,8 @@ use TTBooking\DirectBank\Dictionary\DefaultValue;
 
 class DocumentType
 {
+    use DefaultFormatVersion;
+
     /**
      * @xmlAttribute
      */

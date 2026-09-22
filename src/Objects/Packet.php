@@ -14,7 +14,7 @@ use TTBooking\DirectBank\Dictionary\DefaultValue;
  */
 class Packet implements \Stringable
 {
-    use MappableTrait, ConvertibleTrait;
+    use MappableTrait, ConvertibleTrait, DefaultFormatVersion;
 
     /**
      * @xmlAttribute

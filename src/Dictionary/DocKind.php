@@ -7,7 +7,7 @@ namespace TTBooking\DirectBank\Dictionary;
 /**
  * Коды видов электронных документов
  *
- * @see https://github.com/1C-Company/DirectBank/blob/2.2.2/doc/common-section/tables.md#ed
+ * @see https://github.com/1C-Company/DirectBank/blob/2.3.2/doc/common-section/tables.md#ed
  */
 class DocKind
 {
@@ -64,6 +64,9 @@ class DocKind
     const CURRENCY_TRANSFER_ORDER = '30';
     //Выписка по валютному счету (1С <-- Банк)
     const CURRENCY_STATEMENT = '35';
+
+    //Письмо (1С <--> Банк), с версии 2.3.1
+    const LETTER = '40';
 
     //Обязательные виды электронных документов
     const REQUIRED = [

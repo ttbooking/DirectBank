@@ -16,7 +16,7 @@ use TTBooking\DirectBank\Mapper\ConvertibleTrait;
  */
 class PayDocRu implements \Stringable
 {
-    use ConvertibleTrait;
+    use ConvertibleTrait, DefaultFormatVersion;
 
     /**
      * @xmlAttribute

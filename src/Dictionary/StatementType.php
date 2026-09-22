@@ -7,7 +7,7 @@ namespace TTBooking\DirectBank\Dictionary;
 /**
  * Типы выписок банка
  *
- * @see https://github.com/1C-Company/DirectBank/blob/2.2.2/doc/common-section/tables.md#statementType
+ * @see https://github.com/1C-Company/DirectBank/blob/2.3.2/doc/common-section/tables.md#statementType
  */
 class StatementType
 {
