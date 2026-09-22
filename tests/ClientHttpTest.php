@@ -180,7 +180,26 @@ final class ClientHttpTest extends TestCase
             $this->fail('ClientException expected');
         } catch (ClientException $e) {
             $this->assertSame(1201, $e->getCode());
+            $this->assertSame('1201', $e->getBankCode());
             $this->assertSame('Некорректные данные для аутентификации', $e->getMessage());
+            $this->assertSame('Некорректные данные для аутентификации', $e->getError()->getDescription());
+        }
+    }
+
+    public function testBankErrorCodeIsString()
+    {
+        $this->mock->append(self::error('0042', 'Код с ведущими нулями'), self::error('AB12', 'Буквенный код'));
+
+        $client = $this->createClient();
+
+        foreach (['0042' => 42, 'AB12' => 0] as $bankCode => $code) {
+            try {
+                $client->createSession();
+                $this->fail('ClientException expected');
+            } catch (ClientException $e) {
+                $this->assertSame((string) $bankCode, $e->getBankCode());
+                $this->assertSame($code, $e->getCode());
+            }
         }
     }
 

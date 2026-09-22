@@ -104,7 +104,7 @@ class Client implements ClientInterface
         $result->mapFromXml((string) $response->getBody());
 
         if($error = $result->getError()) {
-            throw new ClientException($error->getDescription(), $error->getCode());
+            throw ClientException::fromError($error);
         }
 
         return $result;

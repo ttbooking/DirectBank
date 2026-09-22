@@ -6,7 +6,10 @@ namespace TTBooking\DirectBank\Objects;
 
 class ErrorType
 {
-    protected int $Code;
+    /**
+     * @var string
+     */
+    protected string $Code;
 
     protected string $Description;
 
@@ -15,7 +18,7 @@ class ErrorType
     /**
      * @return string
      */
-    public function getCode(): int
+    public function getCode(): string
     {
         return $this->Code;
     }
