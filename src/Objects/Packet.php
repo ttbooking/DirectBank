@@ -55,8 +55,9 @@ class Packet implements \Stringable
 
     /**
      * @name Document
+     * @var DocumentType[]
      */
-    protected DocumentType $document;
+    protected array $documents = [];
 
     /**
      * @return string
@@ -167,20 +168,48 @@ class Packet implements \Stringable
     }
 
     /**
+     * Первый документ контейнера
+     *
      * @return \TTBooking\DirectBank\Objects\DocumentType
      */
     public function getDocument(): DocumentType
     {
-        return $this->document;
+        return $this->documents[0] ?? throw new \LogicException('Packet has no Document.');
     }
 
     /**
+     * Заменяет документы контейнера одним документом
+     *
      * @param  \TTBooking\DirectBank\Objects\DocumentType  $document
      * @return Packet
      */
     public function setDocument(DocumentType $document): Packet
     {
-        $this->document = $document;
+        $this->documents = [$document];
+        return $this;
+    }
+
+    /**
+     * @return \TTBooking\DirectBank\Objects\DocumentType[]
+     */
+    public function getDocuments(): array
+    {
+        return $this->documents;
+    }
+
+    /**
+     * @param  \TTBooking\DirectBank\Objects\DocumentType[]  $documents
+     * @return Packet
+     */
+    public function setDocuments(array $documents): Packet
+    {
+        $this->documents = array_values($documents);
+        return $this;
+    }
+
+    public function addDocument(DocumentType $document): Packet
+    {
+        $this->documents[] = $document;
         return $this;
     }
 

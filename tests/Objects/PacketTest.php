@@ -88,6 +88,33 @@ final class PacketTest extends TestCase
         $this->assertTrue($dom->schemaValidate(__DIR__ . '/../Fixture/xsd/1C-Bank_StatementRequest.xsd'));
     }
 
+    public function testMultipleDocuments()
+    {
+        $packet = PacketFixture::createPacket();
+        $first = $packet->getDocument();
+        $second = (new DocumentType())
+            ->setId((string) Uuid::uuid4())
+            ->setDockind($first->getDockind())
+            ->setData($first->getData());
+
+        $packet->addDocument($second);
+
+        $dom = new \DOMDocument();
+        $dom->loadXML($packet->toXml());
+        $this->assertTrue($dom->schemaValidate(__DIR__ . '/../Fixture/xsd/1C-Bank_Packet.xsd'));
+        $this->assertSame(2, $dom->getElementsByTagName('Document')->length);
+
+        $mapped = (new XmlModelMapper())->map($packet->toXml(), new Packet());
+
+        $this->assertCount(2, $mapped->getDocuments());
+        $this->assertSame($first->getId(), $mapped->getDocument()->getId());
+        $this->assertSame($second->getId(), $mapped->getDocuments()[1]->getId());
+
+        $mapped = (new XmlModelMapper())->map(PacketFixture::createPacket()->toXml(), new Packet());
+
+        $this->assertCount(1, $mapped->getDocuments());
+    }
+
     public function testWithoutUserAgent()
     {
         $packet = PacketFixture::createPacket();

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Statement xmlns="http://directbank.1c.ru/XMLSchema" id="s1" formatVersion="2.2.2" creationDate="2024-01-01T10:00:00" userAgent="Bank">
+<Sender bic="044525888" name="Bank"/>
+<Recipient id="c1" name="Org" inn="7705260699" kpp="770501001"/>
+<Data>
+<StatementType>0</StatementType>
+<DateFrom>2024-01-01T00:00:00</DateFrom>
+<DateTo>2024-01-02T00:00:00</DateTo>
+<Account>40702810500000000001</Account>
+<Bank><BIC>044525888</BIC></Bank>
+<OpeningBalance>100.10</OpeningBalance>
+<TotalDebits>10</TotalDebits>
+<TotalCredits>20</TotalCredits>
+<ClosingBalance>110.10</ClosingBalance>
+<OperationInfo>
+<PayDoc id="1" docKind="10"><PayDocRu><DocNo>1</DocNo><DocDate>2024-01-01</DocDate><Sum>1.50</Sum>
+<Payer><Name>A</Name><Bank><BIC>044525888</BIC></Bank></Payer><Payee><Name>B</Name><INN>0012345678</INN><Bank><BIC>044525888</BIC></Bank></Payee>
+<PaymentKind>электронно</PaymentKind><TransitionKind>01</TransitionKind><Priority>5</Priority><Code>0</Code><IncomeTypeCode>1</IncomeTypeCode><Purpose>P</Purpose>
+<BudgetPaymentInfo><DrawerStatus>01</DrawerStatus><CBC>18210102010011000110</CBC><OKTMO>45000000</OKTMO><Reason>ТП</Reason><TaxPeriod>МС.01.2024</TaxPeriod><DocNo>0</DocNo><DocDate>0</DocDate><PayType>0</PayType></BudgetPaymentInfo>
+</PayDocRu></PayDoc>
+<DC>1</DC><Date>2024-01-01</Date><ExtID>e1</ExtID>
+<Stamp><BIC>044525888</BIC><Branch>Br</Branch><Status><Code>02</Code><Name>Исполнен</Name></Status></Stamp>
+</OperationInfo>
+<OperationInfo>
+<PayDoc id="2" docKind="11"><PayRequest><DocNo>2</DocNo><DocDate>2024-01-01</DocDate><Sum>2</Sum>
+<Payer><Name>A</Name><Bank><BIC>044525888</BIC></Bank></Payer><Payee><Name>B</Name><Bank><BIC>044525888</BIC></Bank></Payee><Purpose>P</Purpose>
+<PaymentCondition>1</PaymentCondition><AcceptTerm>5</AcceptTerm><DocDispatchDate>2024-01-01</DocDispatchDate></PayRequest></PayDoc>
+<DC>2</DC><Date>2024-01-01</Date>
+</OperationInfo>
+<OperationInfo>
+<PayDoc id="3" docKind="12"><CollectionOrder><DocNo>3</DocNo><DocDate>2024-01-01</DocDate><Sum>3</Sum>
+<Payer><Name>A</Name><Bank><BIC>044525888</BIC></Bank></Payer><Payee><Name>B</Name><Bank><BIC>044525888</BIC></Bank></Payee><Purpose>P</Purpose>
+<BudgetPaymentInfo><CBC>1</CBC></BudgetPaymentInfo></CollectionOrder></PayDoc>
+<DC>1</DC><Date>2024-01-01</Date>
+</OperationInfo>
+<OperationInfo>
+<PayDoc id="4" docKind="17"><PaymentOrder><DocNo>4</DocNo><DocDate>2024-01-01</DocDate><Sum>4</Sum>
+<Payer><Name>A</Name><Bank><BIC>044525888</BIC></Bank></Payer><Payee><Name>B</Name><Bank><BIC>044525888</BIC></Bank></Payee><Purpose>P</Purpose>
+<TransitionContent>TC</TransitionContent><PartialPaymentNo>1</PartialPaymentNo><PartialTransitionKind>01</PartialTransitionKind><SumResidualPayment>1.00</SumResidualPayment><PartialDocNo>9</PartialDocNo><PartialDocDate>2024-01-01</PartialDocDate></PaymentOrder></PayDoc>
+<DC>1</DC><Date>2024-01-01</Date>
+</OperationInfo>
+<OperationInfo>
+<PayDoc id="5" docKind="18"><BankOrder><DocNo>5</DocNo><DocDate>2024-01-01</DocDate><Sum>5</Sum>
+<Payer><Name>A</Name><Bank><BIC>044525888</BIC></Bank></Payer><Payee><Name>B</Name><Bank><BIC>044525888</BIC></Bank></Payee><Purpose>P</Purpose></BankOrder></PayDoc>
+<DC>1</DC><Date>2024-01-01</Date>
+</OperationInfo>
+<OperationInfo>
+<PayDoc id="6" docKind="16"><MemOrder><DocNo>6</DocNo><DocDate>2024-01-01</DocDate><SpareField5>x</SpareField5><Author><BIC>044525888</BIC><Branch>Br</Branch></Author>
+<AccountNameDebit>d</AccountNameDebit><AccountDebit>1</AccountDebit><Sum>6</Sum><SpareField9a>x</SpareField9a><AccountNameCredit>c</AccountNameCredit><AccountCredit>2</AccountCredit>
+<PartialTransitionKind>01</PartialTransitionKind><SpareField14>x</SpareField14><SpareField15>x</SpareField15><TransitionContent>t</TransitionContent><SpareField20>x</SpareField20></MemOrder></PayDoc>
+<DC>1</DC><Date>2024-01-01</Date>
+</OperationInfo>
+<OperationInfo>
+<PayDoc id="7" docKind="13"><InnerDoc><DocNo>7</DocNo><Sum>7</Sum><Purpose>P</Purpose><InnerDocKind>Комиссия</InnerDocKind></InnerDoc></PayDoc>
+<DC>1</DC><Date>2024-01-01</Date>
+</OperationInfo>
+<OperationInfo>
+<PayDoc id="8" docKind="24"><CashContribution><Sum>8</Sum><Payer><Name>A</Name></Payer><Person><FullName>F</FullName><IdentityDocument>I</IdentityDocument></Person><Symbol>02</Symbol><Source>S</Source></CashContribution></PayDoc>
+<DC>2</DC><Date>2024-01-01</Date>
+</OperationInfo>
+<OperationInfo>
+<PayDoc id="9" docKind="25"><Check><Sum>9</Sum><Person><FullName>F</FullName></Person><DataPrinting><CheckSeries>AA</CheckSeries><CheckNumber>0001</CheckNumber></DataPrinting>
+<Details><Symbol>40</Symbol><Purpose>zp</Purpose><Sum>4</Sum></Details><Details><Symbol>53</Symbol><Sum>5</Sum></Details></Check></PayDoc>
+<DC>1</DC><Date>2024-01-01</Date>
+</OperationInfo>
+<Stamp><BIC>044525888</BIC><Branch>Br</Branch></Stamp>
+</Data>
+<ExtIDStatementRequest>r1</ExtIDStatementRequest>
+</Statement>
