@@ -7,6 +7,7 @@ use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
+use TTBooking\DirectBank\Dictionary\DefaultValue;
 use TTBooking\DirectBank\Dictionary\ErrorCode;
 use TTBooking\DirectBank\Exceptions\ClientException;
 use TTBooking\DirectBank\Exceptions\OtpRequiredException;
@@ -165,7 +166,27 @@ final class ClientHttpTest extends TestCase
         $request = $this->requests[0];
         $this->assertSame('POST', $request->getMethod());
         $this->assertStringEndsWith('/SendPack', $request->getUri()->getPath());
-        $this->assertSame((string) $packet, (string) $request->getBody());
+        $this->assertSame(DefaultValue::BOM . $packet, (string) $request->getBody());
+        $this->assertSame('efbbbf3c3f786d6c', bin2hex(substr((string) $request->getBody(), 0, 8)), 'UTF-8 BOM, затем <?xml');
+    }
+
+    /**
+     * Ответы банка и документы в контейнере разбираются и с BOM
+     */
+    public function testResponseWithBom()
+    {
+        $packet = PacketFixture::createPacket();
+        $xml = preg_replace('/^<\?xml[^>]*\?>\s*/', '', (string) $packet);
+        $xml = str_replace(['<Packet xmlns="http://directbank.1c.ru/XMLSchema"', '</Packet>'], ['<GetPacketResponse', '</GetPacketResponse>'], $xml);
+
+        $this->mock->append(
+            new Response(200, [], DefaultValue::BOM . self::resultBank('<Success><LogonResponse><SID>SID-1</SID></LogonResponse></Success>')),
+            new Response(200, [], DefaultValue::BOM . self::resultBank("<Success>$xml</Success>")),
+        );
+
+        $client = $this->createClient();
+        $this->assertSame('SID-1', $client->createSession());
+        $this->assertSame($packet->getId(), $client->getPack($packet->getId())->getId());
     }
 
     public function testGetPackList()
@@ -339,7 +360,7 @@ final class ClientHttpTest extends TestCase
         $this->assertSame('SID-1', $this->requests[0]->getHeaderLine('sid'));
         $this->assertStringEndsWith('/Logon', $this->requests[1]->getUri()->getPath());
         $this->assertSame('SID-2', $this->requests[2]->getHeaderLine('sid'));
-        $this->assertSame((string) $packet, (string) $this->requests[2]->getBody());
+        $this->assertSame(DefaultValue::BOM . $packet, (string) $this->requests[2]->getBody());
         $this->assertSame('SID-2', $this->requests[3]->getHeaderLine('sid'));
     }
 

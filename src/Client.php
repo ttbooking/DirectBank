@@ -85,7 +85,7 @@ class Client implements ClientInterface
 
     public function sendPack(Packet $packet): string
     {
-        $result = $this->invoke('POST', 'SendPack', (string) $packet);
+        $result = $this->invoke('POST', 'SendPack', DefaultValue::BOM . $packet);
 
         $response = $result->getSuccess()->getSendPacketResponse()
             ?? throw new UnexpectedResponseException('Bank response to SendPack has no SendPacketResponse.');
