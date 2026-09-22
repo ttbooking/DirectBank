@@ -12,7 +12,7 @@ PHP-клиент для обмена с банком по протоколу **1
 ## Требования
 
 - PHP 8.0+
-- [`guzzlehttp/guzzle`](https://github.com/guzzle/guzzle) ^7.0
+- [`guzzlehttp/guzzle`](https://github.com/guzzle/guzzle) ^7.0 | ^8.0
 - [`ttbooking/mapper-php`](https://packagist.org/packages/ttbooking/mapper-php) ^2.3 — маппинг объектов в XML и обратно
 - [`ramsey/uuid`](https://github.com/ramsey/uuid) ^4.0
 - `psr/log` ^1 | ^2 | ^3 (опционально, для логирования запросов)
