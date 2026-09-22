@@ -85,4 +85,70 @@ class PaymentDataType
     {
         return $this->Purpose;
     }
+
+    public function setDocNo(string $docNo): static
+    {
+        $this->DocNo = $docNo;
+        return $this;
+    }
+
+    public function setDocDate(string $docDate): static
+    {
+        $this->DocDate = $docDate;
+        return $this;
+    }
+
+    public function setSum(float $sum): static
+    {
+        $this->Sum = $sum;
+        return $this;
+    }
+
+    public function setPayer(CustomerDetailsType $payer): static
+    {
+        $this->Payer = $payer;
+        return $this;
+    }
+
+    public function setPayee(CustomerDetailsType $payee): static
+    {
+        $this->Payee = $payee;
+        return $this;
+    }
+
+    public function setPaymentKind(?string $paymentKind): static
+    {
+        $this->PaymentKind = $paymentKind;
+        return $this;
+    }
+
+    public function setTransitionKind(?string $transitionKind): static
+    {
+        $this->TransitionKind = $transitionKind;
+        return $this;
+    }
+
+    public function setPriority(?string $priority): static
+    {
+        $this->Priority = $priority;
+        return $this;
+    }
+
+    public function setCode(?string $code): static
+    {
+        $this->Code = $code;
+        return $this;
+    }
+
+    public function setIncomeTypeCode(?string $incomeTypeCode): static
+    {
+        $this->IncomeTypeCode = $incomeTypeCode;
+        return $this;
+    }
+
+    public function setPurpose(?string $purpose): static
+    {
+        $this->Purpose = $purpose;
+        return $this;
+    }
 }

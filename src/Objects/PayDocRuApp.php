@@ -15,4 +15,10 @@ class PayDocRuApp extends PaymentDataType
     {
         return $this->BudgetPaymentInfo;
     }
+
+    public function setBudgetPaymentInfo(?BudgetPaymentInfoType $budgetPaymentInfo): static
+    {
+        $this->BudgetPaymentInfo = $budgetPaymentInfo;
+        return $this;
+    }
 }
