@@ -128,6 +128,34 @@ final class ServiceDocumentsTest extends TestCase
         $this->assertValid($official->toXml(), 'Probe');
     }
 
+    public function testProbeWithDigest()
+    {
+        $probe = (new Probe())
+            ->setId('eafa28b5-6600-424c-b0d3-3785274d570d')
+            ->setCreationDate('2016-04-22T09:33:57')
+            ->setSender(self::customer())
+            ->setRecipient(self::bank())
+            ->setDigest(new DigestType(base64_encode('digest'), '1.0'));
+
+        $this->assertValid((string) $probe, 'Probe');
+
+        $mapped = (new XmlModelMapper())->map((string) $probe, new Probe());
+
+        $this->assertSame('digest', base64_decode($mapped->getDigest()->getData()));
+        $this->assertSame('1.0', $mapped->getDigest()->getAlgorithmVersion());
+    }
+
+    public function testStatementRequestWithDigest()
+    {
+        $request = (new XmlModelMapper())->map(self::fixture('1c/StatementRequest.xml'), new StatementRequest());
+        $this->assertNull($request->getDigest());
+
+        $request->setDigest(new DigestType(base64_encode('digest'), '2.2.2'));
+
+        $this->assertValid($request->toXml(), 'StatementRequest');
+        $this->assertSame('2.2.2', (new XmlModelMapper())->map($request->toXml(), new StatementRequest())->getDigest()->getAlgorithmVersion());
+    }
+
     public function testSettingsLogin()
     {
         $settings = new Settings();

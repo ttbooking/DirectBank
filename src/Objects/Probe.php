@@ -51,6 +51,11 @@ class Probe implements \Stringable
      */
     protected BankPartyType $recipient;
 
+    /**
+     * @name Digest
+     */
+    protected ?DigestType $digest = null;
+
     public function getId(): string
     {
         return $this->id;
@@ -114,6 +119,17 @@ class Probe implements \Stringable
     public function setRecipient(BankPartyType $recipient): Probe
     {
         $this->recipient = $recipient;
+        return $this;
+    }
+
+    public function getDigest(): ?DigestType
+    {
+        return $this->digest;
+    }
+
+    public function setDigest(?DigestType $digest): Probe
+    {
+        $this->digest = $digest;
         return $this;
     }
 

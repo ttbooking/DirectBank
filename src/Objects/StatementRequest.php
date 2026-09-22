@@ -54,6 +54,11 @@ class StatementRequest implements \Stringable
     protected StatementRequestData $data;
 
     /**
+     * @name Digest
+     */
+    protected ?DigestType $digest = null;
+
+    /**
      * @return string
      */
     public function getId(): string
@@ -162,6 +167,17 @@ class StatementRequest implements \Stringable
     public function setData(StatementRequestData $data): StatementRequest
     {
         $this->data = $data;
+        return $this;
+    }
+
+    public function getDigest(): ?DigestType
+    {
+        return $this->digest;
+    }
+
+    public function setDigest(?DigestType $digest): StatementRequest
+    {
+        $this->digest = $digest;
         return $this;
     }
 
