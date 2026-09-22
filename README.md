@@ -182,6 +182,67 @@ $packet = (new Packet())
 $packetId = $client->sendPack($packet);
 ```
 
+### Платёжное поручение
+
+```php
+use Ramsey\Uuid\Uuid;
+use TTBooking\DirectBank\Dictionary\DocKind;
+use TTBooking\DirectBank\Objects\{
+    BankPartyType, BankType, CustomerDetailsType, CustomerPartyType, DocumentType,
+    Packet, ParticipantType, PayDocRu, PayDocRuApp
+};
+
+$customer = (new CustomerPartyType())->setId('2806')->setInn('7705260699');
+$bank     = (new BankPartyType())->setBic('044525888');
+
+$payDocRu = (new PayDocRu())
+    ->setId((string) Uuid::uuid4())
+    ->setCreationDate((new DateTimeImmutable())->format(DATE_ATOM))
+    ->setSender($customer)
+    ->setRecipient($bank)
+    ->setData(
+        (new PayDocRuApp())
+            ->setDocNo('14')
+            ->setDocDate('2026-09-22')
+            ->setSum(1234.56)
+            ->setPayer(
+                (new CustomerDetailsType())
+                    ->setName('ООО "Ромашка"')->setINN('7705260699')->setKPP('770501001')
+                    ->setAccount('40702810813123123222')
+                    ->setBank((new BankType())->setBic('044525888'))
+            )
+            ->setPayee(
+                (new CustomerDetailsType())
+                    ->setName('ООО "Лютик"')->setINN('7704596181')
+                    ->setAccount('40702810401200000035')
+                    ->setBank((new BankType())->setBic('044525999'))
+            )
+            ->setTransitionKind('01')
+            ->setPriority('5')
+            ->setPurpose('Оплата по счёту № 15')
+        // ->setBudgetPaymentInfo(...) — реквизиты бюджетного платежа
+    );
+// ->setDigest(new DigestType($digest, $algorithmVersion)) — если банк требует дайджест
+
+$packet = (new Packet())
+    ->setId((string) Uuid::uuid4())
+    ->setCreationDate((new DateTimeImmutable())->format(DATE_ATOM))
+    ->setSender((new ParticipantType())->setCustomer($customer))
+    ->setRecipient((new ParticipantType())->setBank($bank))
+    ->setDocument(
+        (new DocumentType())
+            ->setId($payDocRu->getId())
+            ->setDockind(DocKind::PAY_DOC_RU)
+            ->setData(base64_encode((string) $payDocRu))
+    );
+
+$client->sendPack($packet);
+```
+
+Платёжное требование собирается так же: `PayRequest` с данными `PayRequestApp` и видом `DocKind::PAY_REQUEST`.
+Исходящие документы собираются в XML через `TTBooking\DirectBank\Mapper\XmlMapper`: поля базовых
+типов идут раньше полей наследников, как требует XSD.
+
 ### Получение ответов банка
 
 ```php
@@ -231,7 +292,11 @@ foreach ($client->getPackList() ?? [] as $id) {
 | Документ | Класс | Вид ЭД |
 |---|---|---|
 | Запрос о состоянии электронного документа | `StatusRequest` (`setExtID()` — ИД документа) | `DocKind::STATUS_REQUEST` |
+| Запрос об отзыве электронного документа | `CancelationRequest` (`setExtID()`, `setReason()`) | `DocKind::CANCELATION_REQUEST` |
 | Запрос-зонд | `Probe` | `DocKind::PROBE` |
+
+Все исходящие документы принимают необязательный дайджест: `setDigest(new DigestType($data, $algorithmVersion))`.
+Как его формировать, стандарт не описывает — это делает внешняя компонента банка.
 
 Входящие: `StatusPacketNotice` (`01`), `StatusDocNotice` (`02`), `Settings` (`06`), `Statement` (`15`).
 
