@@ -10,6 +10,8 @@ interface ClientInterface
 {
     public function createSession(): string;
 
+    public function confirmOtp(string $sessionId, string $otp): string;
+
     public function sendPack(Packet $packet): string;
 
     public function getPackList(?\DateTimeInterface $dateTime = null): ?array;
