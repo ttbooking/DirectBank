@@ -1,6 +1,6 @@
 # DirectBank
 
-PHP-клиент для обмена с банком по протоколу **1С:DirectBank** (формат обмена `2.2.2`).
+PHP-клиент для обмена с банком по протоколу **1С:DirectBank**, стандарт `2.3.2` (поддерживается и `2.2.2`).
 
 Библиотека берёт на себя HTTP-транспорт (аутентификация, сессия, заголовки протокола)
 и даёт типизированные объекты для транспортного контейнера (`Packet`) и документов
@@ -30,15 +30,15 @@ composer require ttbooking/direct-bank
 
 ```php
 use TTBooking\DirectBank\Client;
-use TTBooking\DirectBank\Dictionary\DefaultValue;
+use TTBooking\DirectBank\FormatVersion;
 
 $client = new Client([
     'url'        => 'https://bank.example.ru/API/v1/directbank/', // базовый URL сервиса банка
     'customerId' => '40702810000000000000',                      // идентификатор клиента в банке
     'login'      => 'user',
     'password'   => 'secret',
-    'apiVersion' => DefaultValue::FORMAT_VERSION,                 // по умолчанию '2.2.2'
-    'availableApiVersion' => DefaultValue::FORMAT_VERSION,        // заголовок AvailableAPIVersion в Logon, null — не передавать
+    'apiVersion' => null,                                         // по умолчанию FormatVersion::getDefault(), '2.3.2'
+    'availableApiVersion' => FormatVersion::LATEST,               // заголовок AvailableAPIVersion, null — не передавать
     'userAgent'  => null,                                         // заголовок User-Agent, по умолчанию стандартный Guzzle
     'sessionId'  => null,                                         // можно передать уже полученный SID
     'verify'     => true,                                         // проверка SSL-сертификата
@@ -58,6 +58,22 @@ $client = new Client([
 ```php
 $client = new Client($settings, $logger); // Psr\Log\LoggerInterface
 ```
+
+### Версия стандарта
+
+По умолчанию клиент и все создаваемые документы используют версию `2.3.2`. Для банка,
+который поддерживает только `2.2.x`, версия задаётся один раз:
+
+```php
+use TTBooking\DirectBank\FormatVersion;
+
+FormatVersion::setDefault('2.2.2'); // APIVersion клиента и formatVersion новых документов
+```
+
+Разобранные документы сохраняют версию из XML. Элементы 2.3.x — письма, `SenderFootprint`,
+`Letters` в настройках — в схемах `2.2.2` отсутствуют.
+
+Транспортный контейнер отправляется с UTF-8 BOM, как требует стандарт с версии 2.3.x.
 
 ### Сессия
 
@@ -260,13 +276,40 @@ $client->sendPack($packet);
 Исходящие документы собираются в XML через `TTBooking\DirectBank\Mapper\XmlMapper`: поля базовых
 типов идут раньше полей наследников, как требует XSD.
 
+### Письмо
+
+Письмо (вид `40`) ходит в обе стороны. Размер и CRC32 вложений считаются по содержимому файла:
+
+```php
+use TTBooking\DirectBank\Objects\{BinaryFileType, Letter, LetterAttachmentType, LetterDataType, LinkedDocType};
+
+$letter = (new Letter())
+    ->setId((string) Uuid::uuid4())
+    ->setCreationDate((new DateTimeImmutable())->format(DATE_ATOM))
+    ->setSender((new ParticipantType())->setCustomer($customer))
+    ->setRecipient((new ParticipantType())->setBank($bank))
+    ->setData(
+        (new LetterDataType())
+            ->setDocNum('7')
+            ->setDocDate('2026-09-23')
+            ->setLetterTypeCode('01')      // типы писем банка — в настройках: Settings::getData()->getLetters()
+            ->setTheme('Уточнение назначения платежа')
+            ->setText('Прошу уточнить назначение платежа по поручению № 14.')
+            ->addAttachment(new LetterAttachmentType(BinaryFileType::fromFile('/path/to/invoice.pdf')))
+            ->setLinkedDoc(new LinkedDocType($payDocRu->getId(), DocKind::PAY_DOC_RU))
+    );
+```
+
+Вложения передаются как есть: BOM для текстовых файлов добавляет вызывающий код. У полученного
+письма содержимое вложения — `getBinaryFile()->getContents()`, проверка размера и CRC32 — `isIntact()`.
+
 ### Получение ответов банка
 
 ```php
 use Mapper\XmlModelMapper;
 use TTBooking\DirectBank\Dictionary\DocKind;
 use TTBooking\DirectBank\Dictionary\DocStatus;
-use TTBooking\DirectBank\Objects\{Settings, Statement, StatusDocNotice, StatusPacketNotice};
+use TTBooking\DirectBank\Objects\{Letter, Settings, Statement, StatusDocNotice, StatusPacketNotice};
 
 $mapper = new XmlModelMapper();
 
@@ -281,6 +324,7 @@ foreach ($client->getPackList() ?? [] as $id) {
             DocKind::STATUS_DOC_NOTICE => $mapper->map($xml, new StatusDocNotice()),
             DocKind::SETTINGS => $mapper->map($xml, new Settings()),
             DocKind::BANK_STATEMENT => $mapper->map($xml, new Statement()),
+            DocKind::LETTER => $mapper->map($xml, new Letter()),
             default => null,
         };
 
@@ -315,7 +359,9 @@ foreach ($client->getPackList() ?? [] as $id) {
 Все исходящие документы принимают необязательный дайджест: `setDigest(new DigestType($data, $algorithmVersion))`.
 Как его формировать, стандарт не описывает — это делает внешняя компонента банка.
 
-Входящие: `StatusPacketNotice` (`01`), `StatusDocNotice` (`02`), `Settings` (`06`), `Statement` (`15`).
+Входящие: `StatusPacketNotice` (`01`), `StatusDocNotice` (`02`), `Settings` (`06`), `Statement` (`15`), `Letter` (`40`).
+
+IP- и MAC-адреса клиента передаются в контейнере: `$packet->setSenderFootprint(new SenderFootprintType(['192.168.1.10'], ['00-1A-2B-3C-4D-5E']))`.
 
 ## Справочники
 
@@ -355,10 +401,11 @@ foreach ($client->getPackList() ?? [] as $id) {
 | `CHECK` | `25` | Денежный чек |
 | `CURRENCY_TRANSFER_ORDER` | `30` | Поручение на перевод валюты |
 | `CURRENCY_STATEMENT` | `35` | Выписка по валютному счёту |
+| `LETTER` | `40` | Письмо |
 
 \* обязательные по стандарту. `SHIPPING_CONTAINER_HANDLING_STATUS_NOTIFICATION` — прежнее имя `STATUS_PACKET_NOTICE`.
 
-XSD-схемы формата лежат в [`tests/Fixture/xsd`](tests/Fixture/xsd).
+XSD-схемы формата лежат в [`tests/Fixture/xsd`](tests/Fixture/xsd) (версия 2.3.2), схемы 2.2.2 — в [`tests/Fixture/xsd/2.2.2`](tests/Fixture/xsd/2.2.2).
 
 ## Тесты
 
