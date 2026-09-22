@@ -15,6 +15,12 @@
         </testsuite>
     </testsuites>
 
+    <groups>
+        <exclude>
+            <group>bank-stand</group>
+        </exclude>
+    </groups>
+
     <php>
         <env name="APP_ENV" value="testing"/>
     </php>

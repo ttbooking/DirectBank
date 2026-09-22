@@ -11,6 +11,12 @@ use TTBooking\DirectBank\Fixture\PacketFixture;
 use TTBooking\DirectBank\Objects\Statement;
 use TTBooking\DirectBank\Objects\StatusPacketNotice;
 
+/**
+ * Тесты против тестового стенда банка, требуют сетевого доступа к нему.
+ * Запуск: vendor/bin/phpunit --group bank-stand
+ *
+ * @group bank-stand
+ */
 final class ClientTest extends TestCase
 {
     protected array $settings = [
