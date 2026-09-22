@@ -21,6 +21,7 @@ use TTBooking\DirectBank\Exceptions\UnexpectedResponseException;
 use TTBooking\DirectBank\Objects\GetPacketListResponseType;
 use TTBooking\DirectBank\Objects\Packet;
 use TTBooking\DirectBank\Objects\ResultBank;
+use TTBooking\DirectBank\Objects\Settings;
 
 class Client implements ClientInterface
 {
@@ -123,6 +124,35 @@ class Client implements ClientInterface
         $result = $this->invoke('GET', 'GetPackList', query: ['date' => $since?->format(DefaultValue::TIMESTAMP_FORMAT)]);
 
         return $result->getSuccess()->getGetPacketListResponse();
+    }
+
+    /**
+     * Настройки обмена с банком в автоматическом режиме (GetSettings).
+     * Если идентификатор клиента в банке ещё неизвестен, в настройке customerId передаётся '0'.
+     *
+     * @param string $inn ИНН организации, для которой запрашиваются настройки
+     * @param string $bic БИК банка
+     * @param string|null $account номер расчётного счёта; для зарплатных проектов может отсутствовать
+     */
+    public function getSettings(string $inn, string $bic, ?string $account = null): Settings
+    {
+        $headers = array_filter([
+            'inn' => $inn,
+            'bic' => $bic,
+            'account' => $account,
+            'availableapiversion' => $this->settings['availableApiVersion'],
+        ], fn($value) => $value !== null);
+
+        $result = $this->invoke('POST', 'GetSettings', headers: $headers);
+
+        $response = $result->getSuccess()->getGetSettingsResponse()
+            ?? throw new UnexpectedResponseException('Bank response to GetSettings has no GetSettingsResponse.');
+
+        try {
+            return $response->getSettings();
+        } catch (\Throwable $e) {
+            throw new UnexpectedResponseException('Unable to parse settings from GetSettings response: ' . $e->getMessage(), 0, $e);
+        }
     }
 
     public function getPack(string $uid): Packet

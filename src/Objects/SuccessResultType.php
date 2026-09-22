@@ -14,6 +14,8 @@ class SuccessResultType
 
     protected ?Packet $GetPacketResponse = null;
 
+    protected ?GetSettingsResponseType $GetSettingsResponse = null;
+
     /**
      * @return \TTBooking\DirectBank\Objects\LogonResponseType|null
      */
@@ -35,5 +37,10 @@ class SuccessResultType
     public function getGetPacketResponse(): ?Packet
     {
         return $this->GetPacketResponse;
+    }
+
+    public function getGetSettingsResponse(): ?GetSettingsResponseType
+    {
+        return $this->GetSettingsResponse;
     }
 }
