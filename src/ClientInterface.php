@@ -11,7 +11,7 @@ interface ClientInterface
 
     public function sendPack(Packet $packet): string;
 
-    public function getPackList(\DateTimeInterface $dateTime = null): ?array;
+    public function getPackList(?\DateTimeInterface $dateTime = null): ?array;
 
     public function getPack(string $uid) : Packet;
 }

@@ -61,7 +61,7 @@ class Client implements ClientInterface
     /**
      * @param \DateTimeInterface|null $dateTime отметка времени по часам сервера банка
      */
-    public function getPackList(\DateTimeInterface $dateTime = null): ?array
+    public function getPackList(?\DateTimeInterface $dateTime = null): ?array
     {
         $result = $this->invoke('GET', 'GetPackList', query: ['date' => $dateTime?->format(DefaultValue::TIMESTAMP_FORMAT)]);
 
@@ -106,7 +106,7 @@ class Client implements ClientInterface
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @throws \TTBooking\DirectBank\Exceptions\ClientException
      */
-    protected function invoke(string $method, string $path, string $body = null, array $query = [], bool $reauthenticate = true): ResultBank
+    protected function invoke(string $method, string $path, ?string $body = null, array $query = [], bool $reauthenticate = true): ResultBank
     {
         $client = $this->getHttpClient($this->settings, $path !== 'Logon');
 
