@@ -1,0 +1,34 @@
+name: Tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  tests:
+    name: PHP ${{ matrix.php }}, Guzzle ${{ matrix.guzzle }}
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['8.0', '8.1', '8.2', '8.3', '8.4', '8.5']
+        guzzle: ['7', '8']
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: dom, curl
+          coverage: none
+
+      - name: Install dependencies
+        run: |
+          composer require "guzzlehttp/guzzle:^${{ matrix.guzzle }}.0" --no-update --no-interaction
+          composer update --prefer-dist --no-interaction --no-progress
+
+      # Тесты против стенда банка (группа bank-stand) исключены в phpunit.xml
+      - name: Run tests
+        run: vendor/bin/phpunit
