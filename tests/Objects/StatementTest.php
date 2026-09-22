@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace TTBooking\DirectBank\Objects;
 
 use PHPUnit\Framework\TestCase;
+use TTBooking\DirectBank\Mapper\XmlMapper;
 
 class StatementTest extends TestCase
 {
@@ -178,6 +179,35 @@ class StatementTest extends TestCase
                 $this->assertSame('40', $check->getDetails()[0]->getSymbol());
             }
         }
+    }
+
+    public function roundTripProvider(): array
+    {
+        return [
+            'official example' => ['1c/Statement.xml'],
+            'all doc kinds' => ['statement_all_doc_kinds.xml'],
+            'minimal' => ['statement_minimal.xml'],
+        ];
+    }
+
+    /**
+     * Разобранная выписка собирается обратно в XML, проходящий XSD:
+     * поля базовых типов идут раньше полей наследников
+     *
+     * @dataProvider roundTripProvider
+     */
+    public function testRoundTrip(string $fixture)
+    {
+        $statement = new Statement();
+        $statement->mapFromXml(file_get_contents(__DIR__ . '/../Fixture/xml/' . $fixture));
+
+        $xml = (new XmlMapper())->unmap($statement);
+
+        $this->assertValid($xml);
+
+        $again = new Statement();
+        $again->mapFromXml($xml);
+        $this->assertEquals($statement, $again);
     }
 
     protected function assertValid(string $xml): void
