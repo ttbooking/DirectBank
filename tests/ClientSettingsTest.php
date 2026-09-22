@@ -27,7 +27,9 @@ final class ClientSettingsTest extends TestCase
         $cases = [];
 
         foreach (['url', 'customerId', 'login', 'password', 'apiVersion'] as $key) {
-            $cases["$key missing"] = [$key, null];
+            if ($key !== 'apiVersion') {
+                $cases["$key missing"] = [$key, null];
+            }
             $cases["$key empty"] = [$key, ''];
             $cases["$key not string"] = [$key, 123];
         }

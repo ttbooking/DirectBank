@@ -7,7 +7,7 @@ namespace TTBooking\DirectBank\Dictionary;
 /**
  * Коды статусов электронных документов
  *
- * @see https://github.com/1C-Company/DirectBank/blob/2.2.2/doc/common-section/tables.md#status
+ * @see https://github.com/1C-Company/DirectBank/blob/2.3.2/doc/common-section/tables.md#status
  */
 class DocStatus
 {
@@ -15,7 +15,7 @@ class DocStatus
     const ACCEPTED = '01';
     //Исполнен: платежный документ исполнен банком
     const EXECUTED = '02';
-    //Отклонен банком: платеж не удалось исполнить
+    //Отклонен банком: платеж не удалось исполнить, запрос не удалось выполнить
     const REJECTED = '03';
     //Приостановлен: платежный документ отложен банком из-за недостатка средств на счете
     const SUSPENDED = '04';

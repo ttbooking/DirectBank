@@ -7,7 +7,7 @@ namespace TTBooking\DirectBank\Dictionary;
 /**
  * Коды статусов транспортных контейнеров
  *
- * @see https://github.com/1C-Company/DirectBank/blob/2.2.2/doc/common-section/tables.md#packet
+ * @see https://github.com/1C-Company/DirectBank/blob/2.3.2/doc/common-section/tables.md#packet
  */
 class PacketStatus
 {

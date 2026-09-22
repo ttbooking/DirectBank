@@ -16,7 +16,7 @@ use TTBooking\DirectBank\Mapper\ConvertibleTrait;
  */
 class PayRequest implements \Stringable
 {
-    use ConvertibleTrait;
+    use ConvertibleTrait, DefaultFormatVersion;
 
     /**
      * @xmlAttribute

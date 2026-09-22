@@ -14,7 +14,7 @@ use TTBooking\DirectBank\Dictionary\DefaultValue;
  */
 class CancelationRequest implements \Stringable
 {
-    use ConvertibleTrait;
+    use ConvertibleTrait, DefaultFormatVersion;
 
     /**
      * @xmlAttribute

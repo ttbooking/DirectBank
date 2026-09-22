@@ -56,9 +56,9 @@ final class ServiceDocumentsTest extends TestCase
         $notice->mapFromXml(self::fixture('1c/StatusDocNotice.xml'));
 
         $this->assertSame('204e36e4-6910-416d-99b2-e8109e518744', $notice->getId());
-        $this->assertSame('2016-04-22T09:34:46+03:00', $notice->getCreationDate());
+        $this->assertSame('2019-04-22T09:34:46+03:00', $notice->getCreationDate());
         $this->assertSame('044525888', $notice->getSender()->getBank()->getBic());
-        $this->assertSame('id:42;s:9999', $notice->getRecipient()->getCustomer()->getId());
+        $this->assertSame('82007cb2-dfd1-4193-b903-16cc9b7231c9', $notice->getRecipient()->getCustomer()->getId());
         $this->assertSame('eafa28b5-6600-424c-b0d3-3785274d570d', $notice->getExtID());
         $this->assertNull($notice->getExtIDStatusRequest());
 
@@ -147,7 +147,7 @@ final class ServiceDocumentsTest extends TestCase
         $official = (new XmlModelMapper())->map(self::fixture('1c/Probe.xml'), new Probe());
 
         $this->assertSame('eafa28b5-6600-424c-b0d3-3785274d570d', $official->getId());
-        $this->assertSame('id:42;s:9999', $official->getSender()->getId());
+        $this->assertSame('82007cb2-dfd1-4193-b903-16cc9b7231c9', $official->getSender()->getId());
         $this->assertValid($official->toXml(), 'Probe');
     }
 
@@ -187,12 +187,12 @@ final class ServiceDocumentsTest extends TestCase
         $this->assertSame('EFD857B5-7FA8-4195-8666-2CCADBC3C8DE', $settings->getId());
         $this->assertSame('DemoBankService', $settings->getUserAgent());
         $this->assertSame('044525888', $settings->getSender()->getBic());
-        $this->assertSame('2806', $settings->getRecipient()->getId());
+        $this->assertSame('82007cb2-dfd1-4193-b903-16cc9b7231c9', $settings->getRecipient()->getId());
 
         $data = $settings->getData();
-        $this->assertSame('2806', $data->getCustomerID());
+        $this->assertSame('82007cb2-dfd1-4193-b903-16cc9b7231c9', $data->getCustomerID());
         $this->assertSame('https://dbogate.demobank.ru/', $data->getBankServerAddress());
-        $this->assertSame('2.2.1', $data->getFormatVersion());
+        $this->assertSame('2.3.1', $data->getFormatVersion());
         $this->assertSame('UTF-8', $data->getEncoding());
         $this->assertFalse($data->isCompress());
         $this->assertSame('user_login', $data->getLogon()->getLogin()->getUser());

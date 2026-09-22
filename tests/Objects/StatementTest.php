@@ -69,7 +69,7 @@ class StatementTest extends TestCase
 
         $data = $statement->getData();
         $this->assertSame('40702810500000000001', $data->getAccount());
-        $this->assertSame('2016-05-04T00:00:00.000', $data->getDateFrom());
+        $this->assertSame('2019-05-04T00:00:00.000', $data->getDateFrom());
         $this->assertSame(139280.91, $data->getOpeningBalance());
         $this->assertSame(88970.02, $data->getClosingBalance());
         $this->assertNull($data->getTotalDebits());
@@ -79,7 +79,7 @@ class StatementTest extends TestCase
         $operations = $data->getOperationInfo();
         $this->assertCount(1, $operations);
         $this->assertSame(1, $operations[0]->getDC());
-        $this->assertSame('2016-05-04', $operations[0]->getDate());
+        $this->assertSame('2019-05-04', $operations[0]->getDate());
 
         $payDoc = $operations[0]->getPayDoc();
         $this->assertSame('768', $payDoc->getId());

@@ -30,9 +30,10 @@ class Client implements ClientInterface
 
     protected array $settings = [
         'customerId' => null,
-        'apiVersion' => DefaultValue::FORMAT_VERSION,
-        // Максимальная версия API, которую поддерживает клиент (заголовок AvailableAPIVersion в Logon)
-        'availableApiVersion' => DefaultValue::FORMAT_VERSION,
+        // Версия API обмена данными, по умолчанию FormatVersion::getDefault()
+        'apiVersion' => null,
+        // Максимальная версия API, которую поддерживает клиент (заголовок AvailableAPIVersion)
+        'availableApiVersion' => FormatVersion::LATEST,
         'userAgent' => null,
         'sessionId' => null,
         'login' => null,
@@ -43,6 +44,7 @@ class Client implements ClientInterface
     public function __construct(array $settings, private ?LoggerInterface $logger = null)
     {
         $this->settings = array_replace($this->settings, $settings);
+        $this->settings['apiVersion'] ??= FormatVersion::getDefault();
 
         $this->validateSettings($this->settings);
     }

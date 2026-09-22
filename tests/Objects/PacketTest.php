@@ -80,7 +80,7 @@ final class PacketTest extends TestCase
         $this->assertSame('7705260699', $request->getSender()->getInn());
         $this->assertSame('044525888', $request->getRecipient()->getBic());
         $this->assertSame('40702810500000000001', $request->getData()->getAccount());
-        $this->assertSame('2016-04-21T00:00:00', $request->getData()->getDateFrom());
+        $this->assertSame('2019-04-21T00:00:00', $request->getData()->getDateFrom());
 
         $dom = new \DOMDocument();
         $dom->loadXML($request->toXml());

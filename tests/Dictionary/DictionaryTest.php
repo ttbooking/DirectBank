@@ -6,8 +6,8 @@ namespace TTBooking\DirectBank\Dictionary;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Коды сверяются с классификаторами стандарта 2.2.2:
- * https://github.com/1C-Company/DirectBank/blob/2.2.2/doc/common-section/tables.md
+ * Коды сверяются с классификаторами стандарта 2.3.2:
+ * https://github.com/1C-Company/DirectBank/blob/2.3.2/doc/common-section/tables.md
  */
 final class DictionaryTest extends TestCase
 {
@@ -25,7 +25,7 @@ final class DictionaryTest extends TestCase
             '01', '02', '03', '04', '05', '06',
             '10', '11', '12', '13', '14', '15', '16', '17', '18',
             '19', '20', '21', '22', '23', '24', '25',
-            '30', '35',
+            '30', '35', '40',
         ], $codes);
 
         $this->assertSame(['02', '03', '05', '06'], DocKind::REQUIRED);

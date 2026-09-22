@@ -80,7 +80,7 @@ final class ClientHttpTest extends TestCase
         $this->assertSame('/API/v1/directbank/Logon', $request->getUri()->getPath());
         $this->assertSame('Basic ' . base64_encode('user:secret'), $request->getHeaderLine('Authorization'));
         $this->assertSame('40702810000000000000', $request->getHeaderLine('customerid'));
-        $this->assertSame('2.2.2', $request->getHeaderLine('apiversion'));
+        $this->assertSame('2.3.2', $request->getHeaderLine('apiversion'));
         $this->assertFalse($request->hasHeader('sid'));
     }
 
@@ -96,13 +96,13 @@ final class ClientHttpTest extends TestCase
         foreach ([$logon, $sendPack] as $request) {
             $this->assertSame('application/xml; charset=utf-8', $request->getHeaderLine('Content-Type'));
             $this->assertSame('40702810000000000000', $request->getHeaderLine('CustomerID'));
-            $this->assertSame('2.2.2', $request->getHeaderLine('APIVersion'));
+            $this->assertSame('2.3.2', $request->getHeaderLine('APIVersion'));
             $this->assertStringStartsWith('GuzzleHttp/', $request->getHeaderLine('User-Agent'));
         }
 
         // Logon: логин и пароль, доступная версия API, без SID
         $this->assertSame('Basic ' . base64_encode('user:secret'), $logon->getHeaderLine('Authorization'));
-        $this->assertSame('2.2.2', $logon->getHeaderLine('AvailableAPIVersion'));
+        $this->assertSame('2.3.2', $logon->getHeaderLine('AvailableAPIVersion'));
         $this->assertFalse($logon->hasHeader('SID'));
 
         // Запросы в рамках сессии: SID, без логина и пароля
@@ -481,8 +481,8 @@ final class ClientHttpTest extends TestCase
         $this->assertSame('761700021132', $request->getHeaderLine('Inn'));
         $this->assertSame('044525888', $request->getHeaderLine('Bic'));
         $this->assertSame('40802810200000099888', $request->getHeaderLine('Account'));
-        $this->assertSame('2.2.2', $request->getHeaderLine('APIVersion'));
-        $this->assertSame('2.2.2', $request->getHeaderLine('AvailableAPIVersion'));
+        $this->assertSame('2.3.2', $request->getHeaderLine('APIVersion'));
+        $this->assertSame('2.3.2', $request->getHeaderLine('AvailableAPIVersion'));
         $this->assertFalse($request->hasHeader('Authorization'));
         $this->assertSame('', (string) $request->getBody());
     }

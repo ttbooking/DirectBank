@@ -7,7 +7,7 @@ namespace TTBooking\DirectBank\Dictionary;
 /**
  * Коды ошибок банковского сервиса
  *
- * @see https://github.com/1C-Company/DirectBank/blob/2.2.2/doc/common-section/tables.md#errors
+ * @see https://github.com/1C-Company/DirectBank/blob/2.3.2/doc/common-section/tables.md#errors
  */
 class ErrorCode
 {

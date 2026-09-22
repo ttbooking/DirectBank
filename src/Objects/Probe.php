@@ -14,7 +14,7 @@ use TTBooking\DirectBank\Dictionary\DefaultValue;
  */
 class Probe implements \Stringable
 {
-    use ConvertibleTrait;
+    use ConvertibleTrait, DefaultFormatVersion;
 
     /**
      * @xmlAttribute
