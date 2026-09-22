@@ -13,6 +13,7 @@ use Psr\Log\LoggerInterface;
 use TTBooking\DirectBank\Dictionary\DefaultValue;
 use GuzzleHttp\Client as HttpClient;
 use TTBooking\DirectBank\Exceptions\ClientException;
+use TTBooking\DirectBank\Exceptions\InvalidSettingsException;
 use TTBooking\DirectBank\Objects\Packet;
 use TTBooking\DirectBank\Objects\ResultBank;
 
@@ -30,6 +31,8 @@ class Client implements ClientInterface
     public function __construct(array $settings, private ?LoggerInterface $logger = null)
     {
         $this->settings = array_replace($this->settings, $settings);
+
+        $this->validateSettings($this->settings);
     }
 
     public function createSession(): string
@@ -58,6 +61,26 @@ class Client implements ClientInterface
         $result = $this->invoke('GET', 'GetPack', query: ['id' => $uid]);
 
         return $result->getSuccess()->getGetPacketResponse();
+    }
+
+    /**
+     * @throws \TTBooking\DirectBank\Exceptions\InvalidSettingsException
+     */
+    protected function validateSettings(array $settings): void
+    {
+        foreach (['url', 'customerId', 'login', 'password', 'apiVersion'] as $key) {
+            if (! is_string($settings[$key]) || $settings[$key] === '') {
+                throw new InvalidSettingsException(sprintf('Setting "%s" is required and must be a non-empty string.', $key));
+            }
+        }
+
+        if (! is_null($settings['sessionId']) && ! is_string($settings['sessionId'])) {
+            throw new InvalidSettingsException('Setting "sessionId" must be a string or null.');
+        }
+
+        if (isset($settings['verify']) && ! is_bool($settings['verify']) && ! is_string($settings['verify'])) {
+            throw new InvalidSettingsException('Setting "verify" must be a boolean or a path to a CA bundle.');
+        }
     }
 
     /**

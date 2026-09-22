@@ -42,6 +42,12 @@ $client = new Client([
 ]);
 ```
 
+Настройки проверяются в конструкторе: `url`, `customerId`, `login`, `password` и `apiVersion`
+должны быть непустыми строками, `sessionId` — строкой или `null`, `verify` — булевым значением
+или путём к CA-бандлу. Иначе выбрасывается
+`TTBooking\DirectBank\Exceptions\InvalidSettingsException` (наследник `\InvalidArgumentException`)
+с именем неверной настройки.
+
 Вторым аргументом можно передать любой PSR-3 логгер — все HTTP-запросы и ответы
 будут записаны в формате `MessageFormatter::DEBUG` из Guzzle:
 
