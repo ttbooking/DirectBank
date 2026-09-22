@@ -49,9 +49,12 @@ class Client implements ClientInterface
         return $result->getSuccess()->getSendPacketResponse()->getID();
     }
 
+    /**
+     * @param \DateTimeInterface|null $dateTime отметка времени по часам сервера банка
+     */
     public function getPackList(\DateTimeInterface $dateTime = null): ?array
     {
-        $result = $this->invoke('GET', 'GetPackList', query: ['date' => $dateTime ? $dateTime->format('Y-m-d H:i:s') : null]);
+        $result = $this->invoke('GET', 'GetPackList', query: ['date' => $dateTime?->format(DefaultValue::TIMESTAMP_FORMAT)]);
 
         return $result->getSuccess()->getGetPacketListResponse()?->getPacketID();
     }

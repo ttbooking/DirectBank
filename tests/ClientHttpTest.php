@@ -141,6 +141,18 @@ final class ClientHttpTest extends TestCase
         $this->assertSame('', $request->getUri()->getQuery());
     }
 
+    public function testGetPackListDate()
+    {
+        $this->mock->append(self::success('<GetPacketListResponse TimeStampLastPacket="2026-09-22T10:00:00"><PacketID>A</PacketID></GetPacketListResponse>'));
+
+        $this->createClient(['sessionId' => 'SID-0'])->getPackList(new \DateTimeImmutable('2015-02-16 11:25:32'));
+
+        $query = [];
+        parse_str($this->requests[0]->getUri()->getQuery(), $query);
+
+        $this->assertSame(['date' => '16.02.2015 11:25:32'], $query);
+    }
+
     public function testGetPack()
     {
         $packet = PacketFixture::createPacket();
