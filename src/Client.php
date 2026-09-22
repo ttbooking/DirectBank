@@ -25,6 +25,9 @@ class Client implements ClientInterface
     protected array $settings = [
         'customerId' => null,
         'apiVersion' => DefaultValue::FORMAT_VERSION,
+        // Максимальная версия API, которую поддерживает клиент (заголовок AvailableAPIVersion в Logon)
+        'availableApiVersion' => DefaultValue::FORMAT_VERSION,
+        'userAgent' => null,
         'sessionId' => null,
         'login' => null,
         'password' => null,
@@ -87,8 +90,10 @@ class Client implements ClientInterface
             }
         }
 
-        if (! is_null($settings['sessionId']) && ! is_string($settings['sessionId'])) {
-            throw new InvalidSettingsException('Setting "sessionId" must be a string or null.');
+        foreach (['sessionId', 'availableApiVersion', 'userAgent'] as $key) {
+            if (! is_null($settings[$key]) && (! is_string($settings[$key]) || $settings[$key] === '')) {
+                throw new InvalidSettingsException(sprintf('Setting "%s" must be a non-empty string or null.', $key));
+            }
         }
 
         if (isset($settings['verify']) && ! is_bool($settings['verify']) && ! is_string($settings['verify'])) {
@@ -167,7 +172,10 @@ class Client implements ClientInterface
         return $result;
     }
 
-    protected function getHttpClient(array $settings, $withAuth = false): HttpClient
+    /**
+     * @param bool $withSession запрос в рамках сессии (SID); иначе запрос аутентификации (Logon)
+     */
+    protected function getHttpClient(array $settings, $withSession = false): HttpClient
     {
         $handler = $this->settings['handler'] ?? new CurlHandler();
         $stack = HandlerStack::create($handler);
@@ -176,7 +184,7 @@ class Client implements ClientInterface
             $stack->push(Middleware::log($this->logger, new MessageFormatter(MessageFormatter::DEBUG)));
         }
 
-        if ($withAuth) {
+        if ($withSession) {
             $stack->push(Middleware::mapRequest(function (RequestInterface $request) {
                 if(! $request->hasHeader('sid')) {
                     $sessionId = $this->createSession();
@@ -189,26 +197,36 @@ class Client implements ClientInterface
         }
 
         $headers = [
-            'Content-Type' => 'application/xml',
+            'Content-Type' => 'application/xml; charset=utf-8',
             'Accept' => 'application/xml',
             'customerid' => $settings['customerId'],
             'apiversion' => $settings['apiVersion'],
         ];
 
-        if ($settings['sessionId'] ?? null) {
-            $headers['sid'] = $settings['sessionId'];
+        if (isset($settings['userAgent'])) {
+            $headers['User-Agent'] = $settings['userAgent'];
         }
 
-        return new HttpClient([
+        $config = [
             'base_uri' => $settings['url'],
-            'headers' => $headers,
-            'auth' => [
-                $settings['login'],
-                $settings['password'],
-            ],
             'verify' => $this->settings['verify'] ?? true,
             'http_errors' => false,
             'handler' => $stack,
-        ]);
+        ];
+
+        // Логин и пароль передаются только при аутентификации, дальше запросы идут с SID
+        if ($withSession) {
+            if ($settings['sessionId'] ?? null) {
+                $headers['sid'] = $settings['sessionId'];
+            }
+        } else {
+            if (isset($settings['availableApiVersion'])) {
+                $headers['availableapiversion'] = $settings['availableApiVersion'];
+            }
+
+            $config['auth'] = [$settings['login'], $settings['password']];
+        }
+
+        return new HttpClient(['headers' => $headers] + $config);
     }
 }

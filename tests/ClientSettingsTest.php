@@ -54,6 +54,31 @@ final class ClientSettingsTest extends TestCase
         new Client(['sessionId' => 123] + $this->settings);
     }
 
+    public function optionalStringSettingsProvider(): array
+    {
+        $cases = [];
+
+        foreach (['sessionId', 'availableApiVersion', 'userAgent'] as $key) {
+            $cases["$key empty"] = [$key, ''];
+            $cases["$key not string"] = [$key, 123];
+        }
+
+        return $cases;
+    }
+
+    /**
+     * @dataProvider optionalStringSettingsProvider
+     */
+    public function testOptionalStringSettings(string $key, mixed $value)
+    {
+        $this->assertInstanceOf(Client::class, new Client([$key => null] + $this->settings));
+
+        $this->expectException(InvalidSettingsException::class);
+        $this->expectExceptionMessage("\"$key\"");
+
+        new Client([$key => $value] + $this->settings);
+    }
+
     public function testInvalidVerify()
     {
         $this->expectException(InvalidSettingsException::class);
