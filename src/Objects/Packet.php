@@ -60,6 +60,13 @@ class Packet implements \Stringable
     protected array $documents = [];
 
     /**
+     * Цифровой след отправителя, с версии 2.3.2: в схемах 2.2.x элемента нет
+     *
+     * @name SenderFootprint
+     */
+    protected ?SenderFootprintType $senderFootprint = null;
+
+    /**
      * @return string
      */
     public function getId(): string
@@ -210,6 +217,17 @@ class Packet implements \Stringable
     public function addDocument(DocumentType $document): Packet
     {
         $this->documents[] = $document;
+        return $this;
+    }
+
+    public function getSenderFootprint(): ?SenderFootprintType
+    {
+        return $this->senderFootprint;
+    }
+
+    public function setSenderFootprint(?SenderFootprintType $senderFootprint): Packet
+    {
+        $this->senderFootprint = $senderFootprint;
         return $this;
     }
 

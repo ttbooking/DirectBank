@@ -162,6 +162,23 @@ final class PacketTest extends TestCase
         $this->assertSame('signature', base64_decode($document->getSignatures()[0]->getSignedData()));
     }
 
+    public function testSenderFootprint()
+    {
+        $packet = PacketFixture::createPacket()->setSenderFootprint(
+            (new SenderFootprintType(['192.168.1.10']))->addIP('2001:db8::ff00:42:8329')->addMAC('00-1A-2B-3C-4D-5E')
+        );
+
+        $dom = new \DOMDocument();
+        $dom->loadXML($packet->toXml());
+        $this->assertTrue($dom->schemaValidate(__DIR__ . '/../Fixture/xsd/1C-Bank_Packet.xsd'));
+
+        $footprint = (new XmlModelMapper())->map($packet->toXml(), new Packet())->getSenderFootprint();
+        $this->assertSame(['192.168.1.10', '2001:db8::ff00:42:8329'], $footprint->getIP());
+        $this->assertSame(['00-1A-2B-3C-4D-5E'], $footprint->getMAC());
+
+        $this->assertNull((new XmlModelMapper())->map(PacketFixture::createPacket()->toXml(), new Packet())->getSenderFootprint());
+    }
+
     public function testWithoutUserAgent()
     {
         $packet = PacketFixture::createPacket();
