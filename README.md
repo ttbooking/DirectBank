@@ -6,6 +6,7 @@ PHP-клиент для обмена с банком по протоколу **1
 и даёт типизированные объекты для транспортного контейнера (`Packet`) и документов
 внутри него: запрос выписки, выписка, извещение о состоянии обработки контейнера и др.
 
+[![Tests](https://github.com/ttbooking/DirectBank/actions/workflows/tests.yml/badge.svg)](https://github.com/ttbooking/DirectBank/actions/workflows/tests.yml)
 [![Packagist](https://img.shields.io/packagist/v/ttbooking/direct-bank.svg)](https://packagist.org/packages/ttbooking/direct-bank)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
 
@@ -39,12 +40,13 @@ $client = new Client([
     'apiVersion' => DefaultValue::FORMAT_VERSION,                 // по умолчанию '2.2.2'
     'sessionId'  => null,                                         // можно передать уже полученный SID
     'verify'     => true,                                         // проверка SSL-сертификата
+    'handler'    => null,                                         // свой Guzzle handler, например MockHandler в тестах
 ]);
 ```
 
 Настройки проверяются в конструкторе: `url`, `customerId`, `login`, `password` и `apiVersion`
 должны быть непустыми строками, `sessionId` — строкой или `null`, `verify` — булевым значением
-или путём к CA-бандлу. Иначе выбрасывается
+или путём к CA-бандлу, `handler` — callable. Иначе выбрасывается
 `TTBooking\DirectBank\Exceptions\InvalidSettingsException` (наследник `\InvalidArgumentException`)
 с именем неверной настройки.
 
@@ -59,6 +61,8 @@ $client = new Client($settings, $logger); // Psr\Log\LoggerInterface
 
 Явно вызывать `createSession()` не обязательно: при первом запросе, требующем
 авторизации, клиент сам выполнит `Logon` и подставит полученный `sid` в заголовки.
+Если сессия истекла или стала недействительной (ошибки банка `1006` и `1007`),
+клиент войдёт заново и повторит запрос один раз.
 
 ```php
 $sid = $client->createSession();
@@ -73,9 +77,18 @@ $sid = $client->createSession();
 | `getPackList(?DateTimeInterface $date = null): ?array` | `GET GetPackList` | список идентификаторов контейнеров, готовых к получению |
 | `getPack(string $id): Packet` | `GET GetPack` | транспортный контейнер |
 
-Если банк вернул ошибку (`ResultBank/Error`), выбрасывается
-`TTBooking\DirectBank\Exceptions\ClientException` с кодом и описанием из ответа.
-Транспортные ошибки пробрасываются как исключения Guzzle.
+Отметка времени для `getPackList()` задаётся по часам сервера банка и передаётся
+в формате `dd.MM.yyyy HH:mm:ss`.
+
+### Ошибки
+
+- `TTBooking\DirectBank\Exceptions\ClientException` — банк вернул ошибку (`ResultBank/Error`),
+  при любом HTTP-статусе. Код банка как есть — `getBankCode()` (строка, например `'1201'`),
+  вся ошибка — `getError()`, описание — `getMessage()`, `getCode()` — код числом.
+- `TTBooking\DirectBank\Exceptions\UnexpectedResponseException` (наследник `ClientException`) —
+  ответ не удалось разобрать или в нём нет ожидаемых данных. HTTP-ответ — `getResponse()`,
+  `getCode()` — HTTP-статус.
+- Сетевые ошибки (нет соединения, таймаут) пробрасываются как исключения Guzzle.
 
 ## Примеры
 
@@ -187,8 +200,13 @@ composer install
 vendor/bin/phpunit
 ```
 
-`tests/Objects` — офлайн-тесты маппинга XML. `tests/ClientTest.php` обращается
-к тестовому стенду банка и требует сетевого доступа к нему.
+По умолчанию запускаются офлайн-тесты: маппинг XML на примерах из описания стандарта 1С
+и работа `Client` с подменённым HTTP-обработчиком. Тесты против тестового стенда банка
+(`tests/ClientTest.php`) требуют сетевого доступа к нему и запускаются отдельно:
+
+```bash
+vendor/bin/phpunit --group bank-stand
+```
 
 ## История изменений
 
