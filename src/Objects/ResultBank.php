@@ -24,7 +24,7 @@ class ResultBank
 
     protected ?SuccessResultType $Success = null;
 
-    public function getSuccess(): SuccessResultType
+    public function getSuccess(): ?SuccessResultType
     {
         return $this->Success;
     }

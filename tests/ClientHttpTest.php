@@ -8,6 +8,7 @@ use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
 use TTBooking\DirectBank\Exceptions\ClientException;
+use TTBooking\DirectBank\Exceptions\UnexpectedResponseException;
 use TTBooking\DirectBank\Fixture\PacketFixture;
 
 final class ClientHttpTest extends TestCase
@@ -200,6 +201,47 @@ final class ClientHttpTest extends TestCase
                 $this->assertSame((string) $bankCode, $e->getBankCode());
                 $this->assertSame($code, $e->getCode());
             }
+        }
+    }
+
+    public function testBankErrorWithHttpErrorStatus()
+    {
+        $this->mock->append(self::error('1009', 'Ошибка приемного сервиса', 500));
+
+        try {
+            $this->createClient()->createSession();
+            $this->fail('ClientException expected');
+        } catch (ClientException $e) {
+            $this->assertNotInstanceOf(UnexpectedResponseException::class, $e);
+            $this->assertSame('1009', $e->getBankCode());
+        }
+    }
+
+    public function unexpectedResponseProvider(): array
+    {
+        return [
+            'HTTP error without ResultBank' => [new Response(502, [], '<html>Bad Gateway</html>'), 502],
+            'HTTP error with empty body' => [new Response(503), 503],
+            'not XML' => [new Response(200, [], 'not xml'), 200],
+            'empty body' => [new Response(200), 200],
+            'ResultBank without Success and Error' => [new Response(200, [], self::resultBank('')), 200],
+            'Success without LogonResponse' => [self::success('<SendPacketResponse><ID>PACK-1</ID></SendPacketResponse>'), 0],
+        ];
+    }
+
+    /**
+     * @dataProvider unexpectedResponseProvider
+     */
+    public function testUnexpectedResponse(Response $response, int $code)
+    {
+        $this->mock->append($response);
+
+        try {
+            $this->createClient()->createSession();
+            $this->fail('UnexpectedResponseException expected');
+        } catch (UnexpectedResponseException $e) {
+            $this->assertSame($code, $e->getCode());
+            $this->assertNull($e->getBankCode());
         }
     }
 
