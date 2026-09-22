@@ -204,6 +204,73 @@ final class ClientHttpTest extends TestCase
         }
     }
 
+    public function sessionErrorProvider(): array
+    {
+        return [
+            'session timeout' => ['1006', 200],
+            'invalid session id' => ['1007', 200],
+            'invalid session id, HTTP 401' => ['1007', 401],
+        ];
+    }
+
+    /**
+     * @dataProvider sessionErrorProvider
+     */
+    public function testReauthenticateOnSessionError(string $code, int $status)
+    {
+        $this->mock->append(
+            self::error($code, 'Сессия недействительна', $status),
+            self::logon('SID-2'),
+            self::success('<SendPacketResponse><ID>PACK-1</ID></SendPacketResponse>'),
+            self::success('<SendPacketResponse><ID>PACK-2</ID></SendPacketResponse>'),
+        );
+
+        $client = $this->createClient(['sessionId' => 'SID-1']);
+        $packet = PacketFixture::createPacket();
+
+        $this->assertSame('PACK-1', $client->sendPack($packet));
+        $this->assertSame('PACK-2', $client->sendPack($packet));
+
+        $this->assertCount(4, $this->requests);
+        $this->assertSame('SID-1', $this->requests[0]->getHeaderLine('sid'));
+        $this->assertStringEndsWith('/Logon', $this->requests[1]->getUri()->getPath());
+        $this->assertSame('SID-2', $this->requests[2]->getHeaderLine('sid'));
+        $this->assertSame((string) $packet, (string) $this->requests[2]->getBody());
+        $this->assertSame('SID-2', $this->requests[3]->getHeaderLine('sid'));
+    }
+
+    public function testReauthenticateOnlyOnce()
+    {
+        $this->mock->append(
+            self::error('1006', 'Сессия закрыта по тайм-ауту'),
+            self::logon('SID-2'),
+            self::error('1006', 'Сессия закрыта по тайм-ауту'),
+        );
+
+        try {
+            $this->createClient(['sessionId' => 'SID-1'])->getPackList();
+            $this->fail('ClientException expected');
+        } catch (ClientException $e) {
+            $this->assertSame('1006', $e->getBankCode());
+        }
+
+        $this->assertCount(3, $this->requests);
+    }
+
+    public function testNoReauthenticateOnOtherErrors()
+    {
+        $this->mock->append(self::error('2102', 'Транспортный контейнер не найден'));
+
+        try {
+            $this->createClient(['sessionId' => 'SID-1'])->getPack('unknown');
+            $this->fail('ClientException expected');
+        } catch (ClientException $e) {
+            $this->assertSame('2102', $e->getBankCode());
+        }
+
+        $this->assertCount(1, $this->requests);
+    }
+
     public function testBankErrorWithHttpErrorStatus()
     {
         $this->mock->append(self::error('1009', 'Ошибка приемного сервиса', 500));

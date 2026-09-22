@@ -12,6 +12,7 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
 use TTBooking\DirectBank\Dictionary\DefaultValue;
+use TTBooking\DirectBank\Dictionary\ErrorCode;
 use GuzzleHttp\Client as HttpClient;
 use TTBooking\DirectBank\Exceptions\ClientException;
 use TTBooking\DirectBank\Exceptions\InvalidSettingsException;
@@ -105,7 +106,7 @@ class Client implements ClientInterface
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @throws \TTBooking\DirectBank\Exceptions\ClientException
      */
-    protected function invoke(string $method, string $path, string $body = null, array $query = []): ResultBank
+    protected function invoke(string $method, string $path, string $body = null, array $query = [], bool $reauthenticate = true): ResultBank
     {
         $client = $this->getHttpClient($this->settings, $path !== 'Logon');
 
@@ -114,6 +115,13 @@ class Client implements ClientInterface
         $result = $this->parseResult($response);
 
         if ($error = $result?->getError()) {
+            // Сессия истекла или недействительна: входим заново и повторяем запрос один раз
+            if ($reauthenticate && $path !== 'Logon' && in_array($error->getCode(), ErrorCode::REAUTHENTICATE, true)) {
+                $this->settings['sessionId'] = null;
+
+                return $this->invoke($method, $path, $body, $query, false);
+            }
+
             throw ClientException::fromError($error);
         }
 
