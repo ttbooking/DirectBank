@@ -61,4 +61,12 @@ final class ClientSettingsTest extends TestCase
 
         new Client(['verify' => 1] + $this->settings);
     }
+
+    public function testInvalidHandler()
+    {
+        $this->expectException(InvalidSettingsException::class);
+        $this->expectExceptionMessage('"handler"');
+
+        new Client(['handler' => 'not a handler'] + $this->settings);
+    }
 }

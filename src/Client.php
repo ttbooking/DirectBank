@@ -81,6 +81,10 @@ class Client implements ClientInterface
         if (isset($settings['verify']) && ! is_bool($settings['verify']) && ! is_string($settings['verify'])) {
             throw new InvalidSettingsException('Setting "verify" must be a boolean or a path to a CA bundle.');
         }
+
+        if (isset($settings['handler']) && ! is_callable($settings['handler'])) {
+            throw new InvalidSettingsException('Setting "handler" must be a Guzzle handler (callable).');
+        }
     }
 
     /**
@@ -105,7 +109,7 @@ class Client implements ClientInterface
 
     protected function getHttpClient(array $settings, $withAuth = false): HttpClient
     {
-        $handler = new CurlHandler();
+        $handler = $this->settings['handler'] ?? new CurlHandler();
         $stack = HandlerStack::create($handler);
 
         if ($this->logger) {
