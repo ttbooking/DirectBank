@@ -101,6 +101,7 @@ try {
 | `getPackList(?DateTimeInterface $date = null): ?array` | `GET GetPackList` | список идентификаторов контейнеров, готовых к получению |
 | `getPackListResponse(DateTimeInterface\|string\|null $since = null)` | `GET GetPackList` | список контейнеров и отметка времени последнего из них |
 | `getPack(string $id): Packet` | `GET GetPack` | транспортный контейнер |
+| `getSettings(string $inn, string $bic, ?string $account = null): Settings` | `POST GetSettings` | настройки обмена с банком |
 
 Отметка времени для списка контейнеров задаётся по часам сервера банка и передаётся
 в формате `dd.MM.yyyy HH:mm:ss`. Чтобы получать только новые контейнеры, передавайте
@@ -114,6 +115,22 @@ foreach ($list->getPacketID() as $id) {
 }
 
 $lastTimestamp = $list->getTimeStampLastPacket() ?? $lastTimestamp; // сохранить до следующего запроса
+```
+
+### Настройки обмена
+
+Настройки обмена с банком можно получить автоматически. Если идентификатор клиента в банке ещё
+неизвестен, в `customerId` передаётся `'0'`; из настроек его можно взять для дальнейшей работы:
+
+```php
+$settings = (new Client(['customerId' => '0'] + $credentials))
+    ->getSettings(inn: '7705260699', bic: '044525888', account: '40702810813123123222');
+
+$data = $settings->getData();
+$data->getCustomerID();        // идентификатор клиента в банке
+$data->getBankServerAddress(); // адрес ресурса банка
+$data->getDocKinds();          // виды документов, которыми возможен обмен: ['03', '05', '10', ...]
+$data->getLogon()->getLogin()?->getUser();
 ```
 
 ### Ошибки
