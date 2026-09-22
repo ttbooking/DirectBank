@@ -7,12 +7,12 @@ namespace TTBooking\DirectBank\Objects;
 use Traits\MappableTrait;
 
 /**
- * Извещение о состоянии обработки транспортного контейнера (1С <-- Банк, вид ЭД 01)
+ * Настройки обмена с банком (1С <-- Банк, вид ЭД 06)
  *
- * @xmlRoot StatusPacketNotice
+ * @xmlRoot Settings
  * @xmlEncoding utf-8
  */
-class StatusPacketNotice
+class Settings
 {
     use MappableTrait;
 
@@ -36,15 +36,11 @@ class StatusPacketNotice
      */
     protected ?string $userAgent = null;
 
-    protected ParticipantType $Sender;
+    protected BankPartyType $Sender;
 
-    protected ParticipantType $Recipient;
+    protected CustomerPartyType $Recipient;
 
-    protected string $IDResultSuccessResponse;
-
-    protected ResultStatusType $Result;
-
-    protected ?string $ExtIDPacket = null;
+    protected SettingsDataType $Data;
 
     public function getId(): string
     {
@@ -66,28 +62,18 @@ class StatusPacketNotice
         return $this->userAgent;
     }
 
-    public function getSender(): ParticipantType
+    public function getSender(): BankPartyType
     {
         return $this->Sender;
     }
 
-    public function getRecipient(): ParticipantType
+    public function getRecipient(): CustomerPartyType
     {
         return $this->Recipient;
     }
 
-    public function getIDResultSuccessResponse(): string
+    public function getData(): SettingsDataType
     {
-        return $this->IDResultSuccessResponse;
-    }
-
-    public function getResult(): ResultStatusType
-    {
-        return $this->Result;
-    }
-
-    public function getExtIDPacket(): ?string
-    {
-        return $this->ExtIDPacket;
+        return $this->Data;
     }
 }
