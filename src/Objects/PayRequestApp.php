@@ -42,4 +42,21 @@ class PayRequestApp extends PaymentDataType
         return $this->DocDispatchDate;
     }
 
+    public function setPaymentCondition(string $paymentCondition): static
+    {
+        $this->PaymentCondition = $paymentCondition;
+        return $this;
+    }
+
+    public function setAcceptTerm(?string $acceptTerm): static
+    {
+        $this->AcceptTerm = $acceptTerm;
+        return $this;
+    }
+
+    public function setDocDispatchDate(?string $docDispatchDate): static
+    {
+        $this->DocDispatchDate = $docDispatchDate;
+        return $this;
+    }
 }

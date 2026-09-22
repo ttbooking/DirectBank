@@ -36,4 +36,34 @@ class CustomerDetailsType
     {
         return $this->Bank;
     }
+
+    public function setName(string $name): static
+    {
+        $this->Name = $name;
+        return $this;
+    }
+
+    public function setINN(?string $inn): static
+    {
+        $this->INN = $inn;
+        return $this;
+    }
+
+    public function setKPP(?string $kpp): static
+    {
+        $this->KPP = $kpp;
+        return $this;
+    }
+
+    public function setAccount(?string $account): static
+    {
+        $this->Account = $account;
+        return $this;
+    }
+
+    public function setBank(BankType $bank): static
+    {
+        $this->Bank = $bank;
+        return $this;
+    }
 }

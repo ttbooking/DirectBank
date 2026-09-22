@@ -81,4 +81,52 @@ class BudgetPaymentInfoType
     {
         return $this->PayType;
     }
+
+    public function setDrawerStatus(?string $drawerStatus): static
+    {
+        $this->DrawerStatus = $drawerStatus;
+        return $this;
+    }
+
+    public function setCBC(?string $cbc): static
+    {
+        $this->CBC = $cbc;
+        return $this;
+    }
+
+    public function setOKTMO(?string $oktmo): static
+    {
+        $this->OKTMO = $oktmo;
+        return $this;
+    }
+
+    public function setReason(?string $reason): static
+    {
+        $this->Reason = $reason;
+        return $this;
+    }
+
+    public function setTaxPeriod(?string $taxPeriod): static
+    {
+        $this->TaxPeriod = $taxPeriod;
+        return $this;
+    }
+
+    public function setDocNo(?string $docNo): static
+    {
+        $this->DocNo = $docNo;
+        return $this;
+    }
+
+    public function setDocDate(?string $docDate): static
+    {
+        $this->DocDate = $docDate;
+        return $this;
+    }
+
+    public function setPayType(?string $payType): static
+    {
+        $this->PayType = $payType;
+        return $this;
+    }
 }
