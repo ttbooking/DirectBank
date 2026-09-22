@@ -116,7 +116,7 @@ class DocumentType
      */
     public function isTestOnly(): bool
     {
-        return $this->testOnly;
+        return $this->testOnly ?? false;
     }
 
     /**
@@ -134,7 +134,7 @@ class DocumentType
      */
     public function isCompressed(): bool
     {
-        return $this->compressed;
+        return $this->compressed ?? false;
     }
 
     /**
@@ -152,7 +152,7 @@ class DocumentType
      */
     public function isEncrypted(): bool
     {
-        return $this->encrypted;
+        return $this->encrypted ?? false;
     }
 
     /**
@@ -170,7 +170,7 @@ class DocumentType
      */
     public function isSignResponse(): bool
     {
-        return $this->signResponse;
+        return $this->signResponse ?? false;
     }
 
     /**

@@ -113,9 +113,9 @@ class Packet implements \Stringable
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getUserAgent(): string
+    public function getUserAgent(): ?string
     {
         return $this->userAgent;
     }

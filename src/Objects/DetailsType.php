@@ -13,7 +13,7 @@ class DetailsType
     protected string $Symbol;
     //Указываются направления (цели) выдачи наличных денег в соответствии
     //с содержанием символов отчетности по форме 0409202 и содержанием операции
-    protected ?string $Purpose;
+    protected ?string $Purpose = null;
     //Сумма расходов
     protected float $Sum;
 

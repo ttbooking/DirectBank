@@ -19,6 +19,6 @@ class PaymentOrder extends PaymentDataType
     //Дата платежного документа (поле 41).
     protected ?string $PartialDocDate = null;
 
-    protected ?BudgetPaymentInfoType $BudgetPaymentInfo;
+    protected ?BudgetPaymentInfoType $BudgetPaymentInfo = null;
 
 }

@@ -14,9 +14,9 @@ class PayRequestApp extends PaymentDataType
     //2 - требуется получение акцепта плательщика.
     protected string $PaymentCondition;
     //Срок для акцепта (поле 36): количество дней.
-    protected ?string $AcceptTerm;
+    protected ?string $AcceptTerm = null;
     //Дата отсылки (вручения) плательщику предусмотренных договором документов (поле 37).
-    protected ?string $DocDispatchDate;
+    protected ?string $DocDispatchDate = null;
 
     /**
      * @return string
