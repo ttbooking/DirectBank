@@ -11,4 +11,19 @@ class StatusType
     protected ?string $Name = null;
 
     protected ?string $MoreInfo = null;
+
+    public function getCode(): string
+    {
+        return $this->Code;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->Name;
+    }
+
+    public function getMoreInfo(): ?string
+    {
+        return $this->MoreInfo;
+    }
 }

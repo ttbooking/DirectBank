@@ -93,6 +93,13 @@ class StatementTest extends TestCase
         $this->assertSame('5', $payDocRu->getPriority());
         $this->assertStringStartsWith('За транспортные услуги', $payDocRu->getPurpose());
         $this->assertNull($payDocRu->getBudgetPaymentInfo());
+
+        $this->assertSame('DemoBankService', $statement->getUserAgent());
+
+        $status = $operations[0]->getStamp()->getStatus();
+        $this->assertSame('02', $status->getCode());
+        $this->assertSame('Исполнен', $status->getName());
+        $this->assertSame('Платежный документ исполнен банком', $status->getMoreInfo());
     }
 
     /**
@@ -147,6 +154,11 @@ class StatementTest extends TestCase
         $this->assertSame('53', $check->getDetails()[1]->getSymbol());
         $this->assertNull($check->getDetails()[1]->getPurpose());
         $this->assertSame(5.0, $check->getDetails()[1]->getSum());
+
+        $this->assertSame('Bank', $statement->getUserAgent());
+        $this->assertSame('Комиссия', $payDocs['13']->getInnerDoc()->getInnerDocKind());
+        $this->assertSame(7.0, $payDocs['13']->getInnerDoc()->getSum());
+        $this->assertSame('Br', $statement->getData()->getStamp()->getBranch());
     }
 
     public function testCheckWithSingleDetails()

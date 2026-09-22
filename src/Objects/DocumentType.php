@@ -53,9 +53,18 @@ class DocumentType
     protected ?string $extID = null;
 
     /**
+     * Строка base64 или DataType, если у Data есть атрибуты fileName или contentType
+     *
      * @name Data
+     * @var DataType
      */
-    protected string $data;
+    protected $data;
+
+    /**
+     * @name Signature
+     * @var SignatureType[]
+     */
+    protected array $signatures = [];
 
     /**
      * @return string
@@ -220,20 +229,46 @@ class DocumentType
     }
 
     /**
+     * Содержимое документа в base64
+     *
      * @return string
      */
     public function getData(): string
     {
-        return $this->data;
+        return $this->data instanceof DataType ? $this->data->getValue() : (string) $this->data;
     }
 
     /**
-     * @param  string  $data
+     * @param  string  $data  содержимое документа в base64
      * @return DocumentType
      */
-    public function setData(string $data): DocumentType
+    public function setData(string $data, ?string $fileName = null, ?string $contentType = null): DocumentType
     {
-        $this->data = $data;
+        $this->data = $fileName === null && $contentType === null ? $data : new DataType($data, $fileName, $contentType);
+        return $this;
+    }
+
+    public function getFileName(): ?string
+    {
+        return $this->data instanceof DataType ? $this->data->getFileName() : null;
+    }
+
+    public function getContentType(): ?string
+    {
+        return $this->data instanceof DataType ? $this->data->getContentType() : null;
+    }
+
+    /**
+     * @return SignatureType[]
+     */
+    public function getSignatures(): array
+    {
+        return $this->signatures;
+    }
+
+    public function addSignature(SignatureType $signature): DocumentType
+    {
+        $this->signatures[] = $signature;
         return $this;
     }
 }

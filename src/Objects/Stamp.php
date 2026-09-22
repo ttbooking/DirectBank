@@ -14,4 +14,9 @@ class Stamp extends BankType
     {
         return $this->Branch;
     }
+
+    public function getStatus(): ?StatusType
+    {
+        return $this->Status;
+    }
 }
