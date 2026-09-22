@@ -199,6 +199,7 @@ final class ServiceDocumentsTest extends TestCase
         $this->assertNull($data->getLogon()->getCertificate());
         $this->assertNull($data->getCryptoParameters());
         $this->assertNull($data->getReceiptStatement());
+        $this->assertNull($data->getLetters());
         $this->assertSame(['03', '05', '10', '11', '14', '30'], $data->getDocKinds());
         $this->assertNull($data->getDocuments()[0]->getSigned());
     }
@@ -249,7 +250,10 @@ final class ServiceDocumentsTest extends TestCase
                 '<GroupSignatures numberGroup="2"><Certificate>QQ==</Certificate><Certificate>Qg==</Certificate></GroupSignatures></CustomerSignature>'
                     . '<URLAddinInfo>https://bank.example.ru/addin.zip</URLAddinInfo>',
                 '<Document docKind="02"/><Document docKind="03"/>',
-                '<ReceiptStatement><Login>statement</Login><Instructions>Позвоните в банк</Instructions></ReceiptStatement></Data>',
+                '<ReceiptStatement><Login>statement</Login><Instructions>Позвоните в банк</Instructions></ReceiptStatement>'
+                    . '<Letters><AttachmentsLimit>10485760</AttachmentsLimit>'
+                    . '<LetterType><Code>01</Code><Name>Письмо свободного формата</Name></LetterType>'
+                    . '<LetterType><Code>02</Code><Name>Запрос документов</Name></LetterType></Letters></Data>',
             ],
             self::fixture('1c/Settings_Logon_Certificate.xml')
         );
@@ -274,5 +278,11 @@ final class ServiceDocumentsTest extends TestCase
         $this->assertSame('02', $data->getDocKinds()[0]);
         $this->assertSame('statement', $data->getReceiptStatement()->getLogin());
         $this->assertSame('Позвоните в банк', $data->getReceiptStatement()->getInstructions());
+
+        $letters = $data->getLetters();
+        $this->assertSame(10485760, $letters->getAttachmentsLimit());
+        $this->assertCount(2, $letters->getLetterTypes());
+        $this->assertSame('01', $letters->getLetterTypes()[0]->getCode());
+        $this->assertSame('Запрос документов', $letters->getLetterTypes()[1]->getName());
     }
 }

@@ -39,6 +39,9 @@ class SettingsDataType
     //Параметры получения выписки в автоматическом режиме
     protected ?ReceiptStatementType $ReceiptStatement = null;
 
+    //Свойства писем, с версии 2.3.1
+    protected ?LettersType $Letters = null;
+
     public function getCustomerID(): string
     {
         return $this->CustomerID;
@@ -95,5 +98,10 @@ class SettingsDataType
     public function getReceiptStatement(): ?ReceiptStatementType
     {
         return $this->ReceiptStatement;
+    }
+
+    public function getLetters(): ?LettersType
+    {
+        return $this->Letters;
     }
 }
