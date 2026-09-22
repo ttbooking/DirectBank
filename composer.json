@@ -5,7 +5,7 @@
         "PHP": "^8.0",
         "ttbooking/mapper-php": "^2.3",
         "ramsey/uuid": "^4.0",
-        "guzzlehttp/guzzle": "^7.0",
+        "guzzlehttp/guzzle": "^7.0 || ^8.0",
         "psr/log": "^1.0.1 || ^2.0 || ^3.0"
     },
     "require-dev": {
