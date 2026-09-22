@@ -5,6 +5,7 @@ namespace TTBooking\DirectBank;
 
 use TTBooking\DirectBank\Objects\GetPacketListResponseType;
 use TTBooking\DirectBank\Objects\Packet;
+use TTBooking\DirectBank\Objects\Settings;
 
 interface ClientInterface
 {
@@ -19,4 +20,6 @@ interface ClientInterface
     public function getPackListResponse(\DateTimeInterface|string|null $since = null): GetPacketListResponseType;
 
     public function getPack(string $uid) : Packet;
+
+    public function getSettings(string $inn, string $bic, ?string $account = null): Settings;
 }

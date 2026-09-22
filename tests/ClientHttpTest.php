@@ -7,6 +7,7 @@ use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
+use TTBooking\DirectBank\Dictionary\ErrorCode;
 use TTBooking\DirectBank\Exceptions\ClientException;
 use TTBooking\DirectBank\Exceptions\OtpRequiredException;
 use TTBooking\DirectBank\Exceptions\UnexpectedResponseException;
@@ -453,6 +454,80 @@ final class ClientHttpTest extends TestCase
 
         $this->assertCount(2, $this->requests);
         $this->assertSame('SID-1', $this->requests[1]->getHeaderLine('SID'));
+    }
+
+    public function testGetSettings()
+    {
+        $this->mock->append(
+            self::logon(),
+            new Response(200, [], file_get_contents(__DIR__ . '/Fixture/xml/1c/GetSettingsResponse.xml')),
+        );
+
+        $settings = $this->createClient(['customerId' => '0'])->getSettings('761700021132', '044525888', '40802810200000099888');
+
+        $this->assertSame('EFD857B5-7FA8-4195-8666-2CCADBC3C8DE', $settings->getId());
+        $this->assertSame('2806', $settings->getData()->getCustomerID());
+        $this->assertSame('https://dbogate.demobank.ru/', $settings->getData()->getBankServerAddress());
+        $this->assertSame('user_login', $settings->getData()->getLogon()->getLogin()->getUser());
+        $this->assertSame(['03', '05', '10', '11', '14', '30'], $settings->getData()->getDocKinds());
+
+        [$logon, $request] = $this->requests;
+
+        $this->assertStringEndsWith('/Logon', $logon->getUri()->getPath());
+        $this->assertSame('POST', $request->getMethod());
+        $this->assertStringEndsWith('/GetSettings', $request->getUri()->getPath());
+        $this->assertSame('0', $request->getHeaderLine('CustomerID'));
+        $this->assertSame('SID-1', $request->getHeaderLine('SID'));
+        $this->assertSame('761700021132', $request->getHeaderLine('Inn'));
+        $this->assertSame('044525888', $request->getHeaderLine('Bic'));
+        $this->assertSame('40802810200000099888', $request->getHeaderLine('Account'));
+        $this->assertSame('2.2.2', $request->getHeaderLine('APIVersion'));
+        $this->assertSame('2.2.2', $request->getHeaderLine('AvailableAPIVersion'));
+        $this->assertFalse($request->hasHeader('Authorization'));
+        $this->assertSame('', (string) $request->getBody());
+    }
+
+    public function testGetSettingsWithoutAccount()
+    {
+        $this->mock->append(new Response(200, [], file_get_contents(__DIR__ . '/Fixture/xml/1c/GetSettingsResponse.xml')));
+
+        $this->createClient(['sessionId' => 'SID-0', 'availableApiVersion' => null])->getSettings('7705260699', '044525888');
+
+        $this->assertFalse($this->requests[0]->hasHeader('Account'));
+        $this->assertFalse($this->requests[0]->hasHeader('AvailableAPIVersion'));
+    }
+
+    public function testGetSettingsError()
+    {
+        $this->mock->append(self::error('1012', 'Не удалось получить настройки обмена с банком'));
+
+        try {
+            $this->createClient(['sessionId' => 'SID-0'])->getSettings('7705260699', '044525888');
+            $this->fail('ClientException expected');
+        } catch (ClientException $e) {
+            $this->assertSame(ErrorCode::SETTINGS_UNAVAILABLE, $e->getBankCode());
+        }
+    }
+
+    public function invalidSettingsResponseProvider(): array
+    {
+        return [
+            'no GetSettingsResponse' => [self::success('<SendPacketResponse><ID>PACK-1</ID></SendPacketResponse>')],
+            'not base64' => [self::success('<GetSettingsResponse id="1" formatVersion="2.2.2" creationDate="2026-09-23T10:00:00"><Data dockind="06">!!!</Data></GetSettingsResponse>')],
+            'not settings' => [self::success('<GetSettingsResponse id="1" formatVersion="2.2.2" creationDate="2026-09-23T10:00:00"><Data dockind="06">' . base64_encode('not xml') . '</Data></GetSettingsResponse>')],
+        ];
+    }
+
+    /**
+     * @dataProvider invalidSettingsResponseProvider
+     */
+    public function testGetSettingsUnexpectedResponse(Response $response)
+    {
+        $this->mock->append($response);
+
+        $this->expectException(UnexpectedResponseException::class);
+
+        $this->createClient(['sessionId' => 'SID-0'])->getSettings('7705260699', '044525888');
     }
 
     public function testBankErrorWithHttpErrorStatus()
