@@ -6,11 +6,11 @@ namespace TTBooking\DirectBank\Objects;
 
 class Stamp extends BankType
 {
-    protected string $Branch;
+    protected ?string $Branch = null;
 
     protected ?StatusType $Status= null;
 
-    public function getBranch(): string
+    public function getBranch(): ?string
     {
         return $this->Branch;
     }

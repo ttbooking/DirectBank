@@ -9,12 +9,17 @@ class GetPacketListResponseType
     /**
      * @xmlAttribute
      */
-    protected string $TimeStampLastPacket;
+    protected ?string $TimeStampLastPacket = null;
 
     /**
      * @var string[]
      */
     protected array $PacketID = [];
+
+    public function getTimeStampLastPacket(): ?string
+    {
+        return $this->TimeStampLastPacket;
+    }
 
     /**
      * @return string[]

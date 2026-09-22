@@ -36,7 +36,7 @@ class StatementRequest implements \Stringable
     /**
      * @xmlAttribute
      */
-    protected string $userAgent;
+    protected ?string $userAgent = null;
 
     /**
      * @name Sender
@@ -108,9 +108,9 @@ class StatementRequest implements \Stringable
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getUserAgent(): string
+    public function getUserAgent(): ?string
     {
         return $this->userAgent;
     }

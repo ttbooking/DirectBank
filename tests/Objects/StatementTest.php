@@ -52,4 +52,78 @@ class StatementTest extends TestCase
 
         $this->assertEquals([], $statement->getData()->getOperationInfo());
     }
+
+    /**
+     * Официальный пример выписки из описания стандарта 1С
+     */
+    public function testOfficialExample()
+    {
+        $statement = new Statement();
+        $statement->mapFromXml(file_get_contents(__DIR__ . '/../Fixture/xml/1c/Statement.xml'));
+
+        $this->assertSame('f7cbc6af-33dd-4c37-b67d-7400e1c327ad', $statement->getId());
+        $this->assertSame('044525888', $statement->getSender()->getBic());
+        $this->assertSame('7705260699', $statement->getRecipient()->getInn());
+        $this->assertSame('39f9553d-67b1-4314-a2b1-8bddc99e0f42', $statement->getExtIDStatementRequest());
+
+        $data = $statement->getData();
+        $this->assertSame('40702810500000000001', $data->getAccount());
+        $this->assertSame('2016-05-04T00:00:00.000', $data->getDateFrom());
+        $this->assertSame(139280.91, $data->getOpeningBalance());
+        $this->assertSame(88970.02, $data->getClosingBalance());
+        $this->assertNull($data->getTotalDebits());
+        $this->assertSame('044525888', $data->getStamp()->getBic());
+        $this->assertNull($data->getStamp()->getBranch());
+
+        $operations = $data->getOperationInfo();
+        $this->assertCount(1, $operations);
+        $this->assertSame(1, $operations[0]->getDC());
+        $this->assertSame('2016-05-04', $operations[0]->getDate());
+
+        $payDoc = $operations[0]->getPayDoc();
+        $this->assertSame('768', $payDoc->getId());
+        $this->assertSame('10', $payDoc->getDocKind());
+
+        $payDocRu = $payDoc->getPayDocRu();
+        $this->assertSame('768', $payDocRu->getDocNo());
+        $this->assertSame(14.0, $payDocRu->getSum());
+        $this->assertSame('7705260699', $payDocRu->getPayer()->getINN());
+        $this->assertSame('40802810300020007955', $payDocRu->getPayee()->getAccount());
+        $this->assertSame('046577413', $payDocRu->getPayee()->getBank()->getBic());
+        $this->assertSame('5', $payDocRu->getPriority());
+        $this->assertStringStartsWith('За транспортные услуги', $payDocRu->getPurpose());
+        $this->assertNull($payDocRu->getBudgetPaymentInfo());
+    }
+
+    /**
+     * Выписка только с обязательными по XSD элементами
+     */
+    public function testMinimal()
+    {
+        $xml = file_get_contents(__DIR__ . '/../Fixture/xml/statement_minimal.xml');
+
+        $this->assertValid($xml);
+
+        $statement = new Statement();
+        $statement->mapFromXml($xml);
+
+        $data = $statement->getData();
+        $this->assertNull($data->getDateFrom());
+        $this->assertNull($data->getOpeningBalance());
+        $this->assertNull($data->getStamp());
+        $this->assertSame(0.0, $data->getClosingBalance());
+
+        $operation = $data->getOperationInfo()[0];
+        $this->assertNull($operation->getStamp());
+        $this->assertNull($operation->getExtID());
+        $this->assertSame(7.0, $operation->getPayDoc()->getInnerDoc()->getSum());
+    }
+
+    protected function assertValid(string $xml): void
+    {
+        $dom = new \DOMDocument();
+        $dom->loadXML($xml);
+
+        $this->assertTrue($dom->schemaValidate(__DIR__ . '/../Fixture/xsd/1C-Bank_Statement.xsd'));
+    }
 }

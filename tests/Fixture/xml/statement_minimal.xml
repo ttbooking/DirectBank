@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Statement xmlns="http://directbank.1c.ru/XMLSchema" id="s1" formatVersion="2.2.2" creationDate="2024-01-01T10:00:00">
+<Sender bic="044525888"/><Recipient id="c1"/>
+<Data><StatementType>0</StatementType><DateTo>2024-01-02T00:00:00</DateTo><Account>40702810500000000001</Account><Bank><BIC>044525888</BIC></Bank><ClosingBalance>0</ClosingBalance>
+<OperationInfo><PayDoc id="7" docKind="13"><InnerDoc><Sum>7</Sum><InnerDocKind>K</InnerDocKind></InnerDoc></PayDoc><DC>1</DC><Date>2024-01-01</Date></OperationInfo>
+</Data></Statement>

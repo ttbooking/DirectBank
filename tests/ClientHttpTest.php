@@ -142,6 +142,19 @@ final class ClientHttpTest extends TestCase
         $this->assertSame('', $request->getUri()->getQuery());
     }
 
+    public function testGetPackListWithoutTimeStamp()
+    {
+        $this->mock->append(
+            self::success('<GetPacketListResponse><PacketID>A</PacketID></GetPacketListResponse>'),
+            self::success('<GetPacketListResponse/>'),
+        );
+
+        $client = $this->createClient(['sessionId' => 'SID-0']);
+
+        $this->assertSame(['A'], $client->getPackList());
+        $this->assertNull($client->getPackList());
+    }
+
     public function testGetPackListDate()
     {
         $this->mock->append(self::success('<GetPacketListResponse TimeStampLastPacket="2026-09-22T10:00:00"><PacketID>A</PacketID></GetPacketListResponse>'));

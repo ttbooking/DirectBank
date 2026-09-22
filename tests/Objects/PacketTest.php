@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace TTBooking\DirectBank\Objects;
 
+use Mapper\XmlModelMapper;
 use PHPUnit\Framework\TestCase;
 use Ramsey\Uuid\Uuid;
 use TTBooking\DirectBank\Fixture\PacketFixture;
@@ -62,5 +63,38 @@ final class PacketTest extends TestCase
         $dom->loadXML($xml);
 
         $this->assertTrue($dom->schemaValidate(__DIR__ . '/../Fixture/xsd/1C-Bank_StatementRequest.xsd'));
+    }
+
+    /**
+     * Официальный пример запроса выписки из описания стандарта 1С:
+     * разбирается и собирается обратно в XML, проходящий XSD
+     */
+    public function testOfficialStatementRequest()
+    {
+        $request = (new XmlModelMapper())->map(
+            file_get_contents(__DIR__ . '/../Fixture/xml/1c/StatementRequest.xml'),
+            new StatementRequest()
+        );
+
+        $this->assertSame('da06dc8f-afbe-4172-89c8-0d4492c2dd25', $request->getId());
+        $this->assertSame('7705260699', $request->getSender()->getInn());
+        $this->assertSame('044525888', $request->getRecipient()->getBic());
+        $this->assertSame('40702810500000000001', $request->getData()->getAccount());
+        $this->assertSame('2016-04-21T00:00:00', $request->getData()->getDateFrom());
+
+        $dom = new \DOMDocument();
+        $dom->loadXML($request->toXml());
+
+        $this->assertTrue($dom->schemaValidate(__DIR__ . '/../Fixture/xsd/1C-Bank_StatementRequest.xsd'));
+    }
+
+    public function testWithoutUserAgent()
+    {
+        $packet = PacketFixture::createPacket();
+
+        $this->assertNull((new Packet())->getUserAgent());
+        $this->assertNull((new StatementRequest())->getUserAgent());
+        $this->assertFalse($packet->getDocument()->isTestOnly());
+        $this->assertFalse($packet->getDocument()->isCompressed());
     }
 }

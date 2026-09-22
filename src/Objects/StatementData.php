@@ -29,7 +29,7 @@ class StatementData
      */
     protected array $OperationInfo = [];
 
-    protected Stamp $Stamp;
+    protected ?Stamp $Stamp = null;
 
     public function getStatementType(): string
     {
@@ -84,7 +84,7 @@ class StatementData
         return $this->OperationInfo;
     }
 
-    public function getStamp(): Stamp
+    public function getStamp(): ?Stamp
     {
         return $this->Stamp;
     }
