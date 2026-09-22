@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<StatusPacketNotice xmlns="http://directbank.1c.ru/XMLSchema" id="n1" formatVersion="2.2.2" creationDate="2024-01-01T10:00:00" userAgent="B">
+<Sender><Bank bic="044525888" name="B"/></Sender><Recipient><Customer id="c1" inn="7705260699"/></Recipient>
+<IDResultSuccessResponse>p1</IDResultSuccessResponse><Result><Status><Code>01</Code><Name>Принят</Name><MoreInfo>m</MoreInfo></Status></Result><ExtIDPacket>x1</ExtIDPacket>
+</StatusPacketNotice>
