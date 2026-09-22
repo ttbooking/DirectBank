@@ -34,6 +34,11 @@ class Statement
      */
     protected string $creationDate;
 
+    /**
+     * @xmlAttribute
+     */
+    protected ?string $userAgent = null;
+
     protected BankPartyType $Sender;
 
     protected CustomerPartyType $Recipient;
@@ -55,6 +60,11 @@ class Statement
     public function getCreationDate(): string
     {
         return $this->creationDate;
+    }
+
+    public function getUserAgent(): ?string
+    {
+        return $this->userAgent;
     }
 
     public function getSender(): BankPartyType

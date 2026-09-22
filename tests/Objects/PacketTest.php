@@ -115,6 +115,53 @@ final class PacketTest extends TestCase
         $this->assertCount(1, $mapped->getDocuments());
     }
 
+    /**
+     * Пример контейнера с подписью из описания транспортного протокола 1С
+     */
+    public function testOfficialPacketWithSignature()
+    {
+        $packet = (new XmlModelMapper())->map(file_get_contents(__DIR__ . '/../Fixture/xml/1c/Packet.xml'), new Packet());
+
+        $document = $packet->getDocument();
+        $this->assertSame('a64225eb-9737-4d80-bd9d-1ffe5fdb63b1', $document->getId());
+        $this->assertStringStartsWith('<?xml version="1.0" encoding="UTF-8"?>', base64_decode($document->getData()));
+        $this->assertNull($document->getFileName());
+
+        $signatures = $document->getSignatures();
+        $this->assertCount(1, $signatures);
+        $this->assertSame('Удостоверяющий Центр Банка', $signatures[0]->getX509IssuerName());
+        $this->assertSame('022C03015B03010F022FE2', $signatures[0]->getX509SerialNumber());
+        $this->assertStringStartsWith('MIIGbQYJKoZIhvcNAQcC', trim($signatures[0]->getSignedData()));
+    }
+
+    public function testDataAttributesAndSignature()
+    {
+        $packet = PacketFixture::createPacket();
+        $data = $packet->getDocument()->getData();
+
+        $packet->getDocument()
+            ->setData($data, 'statement-request.xml', 'application/xml')
+            ->addSignature(
+                (new SignatureType())
+                    ->setX509IssuerName('CN=Test CA')
+                    ->setX509SerialNumber('0A1B')
+                    ->setSignedData(base64_encode('signature'))
+            );
+
+        $dom = new \DOMDocument();
+        $dom->loadXML($packet->toXml());
+        $this->assertTrue($dom->schemaValidate(__DIR__ . '/../Fixture/xsd/1C-Bank_Packet.xsd'));
+
+        $document = (new XmlModelMapper())->map($packet->toXml(), new Packet())->getDocument();
+
+        $this->assertSame($data, $document->getData());
+        $this->assertSame('statement-request.xml', $document->getFileName());
+        $this->assertSame('application/xml', $document->getContentType());
+        $this->assertCount(1, $document->getSignatures());
+        $this->assertSame('0A1B', $document->getSignatures()[0]->getX509SerialNumber());
+        $this->assertSame('signature', base64_decode($document->getSignatures()[0]->getSignedData()));
+    }
+
     public function testWithoutUserAgent()
     {
         $packet = PacketFixture::createPacket();

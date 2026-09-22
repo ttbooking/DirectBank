@@ -38,7 +38,7 @@ class PayDoc
     protected ?MemOrderApp $MemOrder = null;
 
     //Данные внутр.банковского документа
-    protected ?OtherPaymentDataType $InnerDoc = null;
+    protected ?InnerDocType $InnerDoc = null;
 
     //Данные объявления на взнос наличными
     protected ?CashContributionType $CashContribution = null;
@@ -92,7 +92,7 @@ class PayDoc
         return $this->MemOrder;
     }
 
-    public function getInnerDoc(): ?OtherPaymentDataType
+    public function getInnerDoc(): ?InnerDocType
     {
         return $this->InnerDoc;
     }
