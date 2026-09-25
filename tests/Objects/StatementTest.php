@@ -181,6 +181,55 @@ class StatementTest extends TestCase
         }
     }
 
+    public function payDocWithoutDocNoProvider(): array
+    {
+        return [
+            'no element' => [''],
+            'empty element' => ['<DocNo/>'],
+        ];
+    }
+
+    /**
+     * Банки присылают в выписке документы без номера, хотя по XSD он обязателен
+     *
+     * @dataProvider payDocWithoutDocNoProvider
+     */
+    public function testPayDocWithoutDocNo(string $docNo)
+    {
+        $xml = str_replace(
+            '<PayDocRu><DocNo>1</DocNo>',
+            '<PayDocRu>' . $docNo,
+            file_get_contents(__DIR__ . '/../Fixture/xml/statement_all_doc_kinds.xml')
+        );
+
+        $statement = new Statement();
+        $statement->mapFromXml($xml);
+
+        $payDocRu = $statement->getData()->getOperationInfo()[0]->getPayDoc()->getPayDocRu();
+        $this->assertNull($payDocRu->getDocNo());
+        $this->assertSame(1.5, $payDocRu->getSum());
+    }
+
+    /**
+     * Возмещение по СБП от банка приходит с пустым номером документа,
+     * фрагмент реальной выписки с заменёнными реквизитами
+     */
+    public function testSbpRefundWithEmptyDocNo()
+    {
+        $xml = file_get_contents(__DIR__ . '/../Fixture/xml/statement_empty_doc_no.xml');
+
+        $this->assertValid($xml);
+
+        $statement = new Statement();
+        $statement->mapFromXml($xml);
+
+        $payDocRu = $statement->getData()->getOperationInfo()[0]->getPayDoc()->getPayDocRu();
+        $this->assertNull($payDocRu->getDocNo());
+        $this->assertSame('2024-01-02', $payDocRu->getDocDate());
+        $this->assertSame(100.5, $payDocRu->getSum());
+        $this->assertSame('7700000002', $payDocRu->getPayer()->getINN());
+    }
+
     public function roundTripProvider(): array
     {
         return [

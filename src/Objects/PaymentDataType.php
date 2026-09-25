@@ -7,7 +7,7 @@ namespace TTBooking\DirectBank\Objects;
 class PaymentDataType
 {
     //Номер документа (поле 3).
-    protected string $DocNo;
+    protected ?string $DocNo = null;
     //Дата составления (поле 4).
     protected string $DocDate;
     //Сумма документа (поле 7).
@@ -31,7 +31,7 @@ class PaymentDataType
     //Назначение платежа (поле 24).
     protected ?string $Purpose = null;
 
-    public function getDocNo(): string
+    public function getDocNo(): ?string
     {
         return $this->DocNo;
     }
@@ -86,7 +86,7 @@ class PaymentDataType
         return $this->Purpose;
     }
 
-    public function setDocNo(string $docNo): static
+    public function setDocNo(?string $docNo): static
     {
         $this->DocNo = $docNo;
         return $this;
