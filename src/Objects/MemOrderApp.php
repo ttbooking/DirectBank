@@ -9,7 +9,7 @@ namespace TTBooking\DirectBank\Objects;
 class MemOrderApp
 {
     //Номер документа (поле 3).
-    protected string $DocNo;
+    protected ?string $DocNo = null;
     //Дата составления (поле 4).
     protected string $DocDate;
     //Свободное поле (поле 5)
@@ -39,7 +39,7 @@ class MemOrderApp
     //Свободное поле (поле 20)
     protected ?string $SpareField20 = null;
 
-    public function getDocNo(): string
+    public function getDocNo(): ?string
     {
         return $this->DocNo;
     }
